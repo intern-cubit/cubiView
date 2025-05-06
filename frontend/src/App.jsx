@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import AddDevicePage from './pages/AddDevicePage';
 import DeviceDetails from './pages/DeviceDetails';
 import SuperAdminDashboard from './pages/superAdminDashboard';
+import UploadReport from './pages/UploadReport';
 
 const App = () => {
     const isAuth = useSelector((s) => s.auth.isAuthenticated);
@@ -59,6 +60,11 @@ const App = () => {
                     path="/admin/dashboard"
                     // element={isAuth && isAdmin ? <AdminDashboard /> : <Navigate to={"/login"} />}
                     element={<SuperAdminDashboard />}
+                />
+                <Route
+                    path='/upload-report'
+                    // element={isAuth ? <UploadReport /> : <Navigate to={"/login"} />}
+                    element={<UploadReport />}
                 />
             </Routes>
         </BrowserRouter>
