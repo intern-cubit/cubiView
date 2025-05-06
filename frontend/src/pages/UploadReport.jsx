@@ -5,6 +5,7 @@ const UploadReport = () => {
     const [file, setFile] = useState(null);
     const [uploadUrl, setUploadUrl] = useState('');
     const [loading, setLoading] = useState(false);
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +20,7 @@ const UploadReport = () => {
 
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/device/report', {
+            const response = await fetch(`${BACKEND_URL}/api/device/report`, {
                 method: 'POST',
                 body: formData,
             });

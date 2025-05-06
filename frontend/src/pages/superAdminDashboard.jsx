@@ -13,6 +13,7 @@ export default function SuperAdminDashboard() {
     const [generatingCoupons, setGeneratingCoupons] = useState(false);
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const navigate = useNavigate();
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
     // Fetch dashboard data
     useEffect(() => {
@@ -26,7 +27,7 @@ export default function SuperAdminDashboard() {
     const fetchDashboardData = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/sadmin/get-details');
+            const response = await fetch(`${BACKEND_URL}/api/sadmin/get-details`);
             const data = await response.json();
 
             if (data.success) {
@@ -44,7 +45,7 @@ export default function SuperAdminDashboard() {
     const generateCoupons = async () => {
         setGeneratingCoupons(true);
         try {
-            const response = await fetch('http://localhost:5000/api/sadmin/generate-coupons', {
+            const response = await fetch(`${BACKEND_URL}/api/sadmin/generate-coupons`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
