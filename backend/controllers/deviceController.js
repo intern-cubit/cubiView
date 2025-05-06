@@ -37,10 +37,8 @@ export const getDeviceDetails = async (req, res) => {
 export const uploadReport = async (req, res) => {
     try {
         const { macId } = req.body;
-        if (!macId ) {
-            return res
-                .status(400)
-                .json({ error: "macId is required" });
+        if (!macId) {
+            return res.status(400).json({ error: "macId is required" });
         }
         if (!req.file) {
             return res.status(400).json({ error: "ZIP file is required" });
@@ -69,14 +67,55 @@ export const uploadReport = async (req, res) => {
         // save report record
         const report = await Report.create({
             deviceId: device._id,
-            adminId : device.adminId,
+            adminId: device.adminId,
             reportUrl: result.secure_url,
-            date: new Date(),
+            reportDate: Date.now(),
         });
 
         return res.json({ url: report.reportUrl });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ error: err.message });
+    }
+};
+
+export const downloadReport = async (req, res) => {
+    try {
+        const { macId, date } = req.body;
+        const user = req.user;
+
+        if (!user) return res.status(401).json({ error: "Unauthorized" });
+        if (!macId || !date)
+            return res
+                .status(400)
+                .json({ error: "macId and date are required" });
+
+        const device = await Device.findOne({ macId });
+        if (!device) return res.status(404).json({ error: "Device not found" });
+
+        const startOfDay = new Date(date);
+        startOfDay.setUTCHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(date);
+        endOfDay.setUTCHours(23, 59, 59, 999);
+
+        const report = await Report.findOne({
+            deviceId: device._id,
+            adminId: device.adminId,
+            reportDate: {
+                $gte: startOfDay,
+                $lte: endOfDay,
+            },
+        });
+
+        if (!report) return res.status(404).json({ error: "Report not found" });
+
+        const downloadUrl = report.reportUrl;
+        return res.status(200).json({ downloadUrl });
+    } catch (err) {
+        console.error("Download error:", err);
+        return res.status(500).json({
+            error: "Server error while processing the download request.",
+        });
     }
 };
