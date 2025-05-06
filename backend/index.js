@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import deviceRoutes from "./routes/deviceRoutes.js";
+import sadminRoutes from "./routes/SAdminRoutes.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.get("/uptimerobot/status", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/device", deviceRoutes);
+app.use("/api/sadmin", sadminRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

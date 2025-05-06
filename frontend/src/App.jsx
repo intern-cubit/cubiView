@@ -11,6 +11,7 @@ import { Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import AddDevicePage from './pages/AddDevicePage';
 import DeviceDetails from './pages/DeviceDetails';
+import SuperAdminDashboard from './pages/superAdminDashboard';
 
 const App = () => {
     const isAuth = useSelector((s) => s.auth.isAuthenticated);
@@ -53,6 +54,11 @@ const App = () => {
                     path="/device/:macId"
                     // element={isAuth ? <DeviceDetails /> : <Navigate to={"/login"} />}
                     element={<DeviceDetails />}
+                />
+                <Route
+                    path="/admin/dashboard"
+                    // element={isAuth && isAdmin ? <AdminDashboard /> : <Navigate to={"/login"} />}
+                    element={<SuperAdminDashboard />}
                 />
             </Routes>
         </BrowserRouter>

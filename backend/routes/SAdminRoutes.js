@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import authMiddleware from '../middleware/authMiddleware.js'
+// import sadminMiddlewareMiddleware from '../middleware/authMiddleware.js'
+import { generateCoupons, getDetails } from '../controllers/SAdminController.js'
 
 const router = Router()
 
-router.get('/get-details', sadminMiddleware, getDetails);
-router.post('/generate-coupons', sadminMiddleware, generateCoupons);
+router.get('/get-details', getDetails);
+router.post('/generate-coupons', generateCoupons);
 
 export default router
