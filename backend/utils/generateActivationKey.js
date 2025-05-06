@@ -1,7 +1,4 @@
 export const generateActivationKey = (imei) => {
-    // Validate IMEI: must be exactly 15 digits
-    if (!/^\d{15}$/.test(imei)) return null;
-
     // Hash the IMEI to a base-36 string
     const base36Hash = (input) => {
         let hash = 0;

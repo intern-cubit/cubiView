@@ -20,6 +20,10 @@ app.get("/api/uptimerobot/status", (req, res) => {
     res.status(200).json({ status: "Server is running" });
 });
 // Routes
+app.get("/uptimerobot/status", (req, res) => {
+    res.status(200).json({ status: "Server is running" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/device", deviceRoutes);
