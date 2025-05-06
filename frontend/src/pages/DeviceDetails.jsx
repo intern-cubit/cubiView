@@ -23,12 +23,13 @@ export default function DeviceDetails() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState(null);
     const [isDeleted, setIsDeleted] = useState(false);
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
     useEffect(() => {
         const fetchDeviceDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/api/device/${macId}`, {
+                const response = await fetch(`${BACKEND_URL}/api/device/${macId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -94,7 +95,7 @@ export default function DeviceDetails() {
         setDeleteError(null);
 
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/delete-device/${macId}`, {
+            const response = await fetch(`${BACKEND_URL}/api/admin/delete-device/${macId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
