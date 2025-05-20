@@ -53,20 +53,28 @@ export const verifyPayment = async (req, res) => {
 };
 
 export const addDevice = async (req, res) => {
-    const { macId } = req.body;
+    const { macId, motherboardSerial } = req.body;
     const { id: adminId } = req.user;
 
     try {
-        const existingDevice = await Device.findOne({ macId });
-        if (!macId) {
+        const existingDevice = await Device.findOne({
+            macId,
+            motherboardSerial,
+        });
+        if (!macId || !motherboardSerial) {
             return res.status(400).json({ message: "All fields are required" });
         }
         if (existingDevice) {
             return res.status(400).json({ message: "Device already exists" });
         }
+        const activationKey = generateActivationKey(macId, motherboardSerial);
+        if (!activationKey) {
+            return res.status(400).json({ message: "Invalid IMEI" });
+        }
         const device = new Device({
             macId,
-            activationKey: 1234,
+            motherboardSerial,
+            activationKey,
             adminId,
         });
         await device.save();
@@ -84,23 +92,27 @@ export const addDevice = async (req, res) => {
 };
 
 export const add_device = async (req, res) => {
-    const { macId } = req.body;
+    const { macId, motherboardSerial } = req.body;
     const { id: adminId } = req.user;
 
     try {
-        const existingDevice = await Device.findOne({ macId });
-        if (!macId) {
+        const existingDevice = await Device.findOne({
+            macId,
+            motherboardSerial,
+        });
+        if (!macId || !motherboardSerial) {
             return res.status(400).json({ message: "All fields are required" });
         }
         if (existingDevice) {
             return res.status(400).json({ message: "Device already exists" });
         }
-        const activationKey = generateActivationKey(macId);
+        const activationKey = generateActivationKey(macId, motherboardSerial);
         if (!activationKey) {
             return res.status(400).json({ message: "Invalid IMEI" });
         }
         const device = new Device({
             macId,
+            motherboardSerial,
             activationKey,
             adminId,
         });
