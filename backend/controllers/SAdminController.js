@@ -70,7 +70,7 @@ export const checkActivation = async (req, res) => {
         if (!processorId || !activationKey || !motherboardSerial) {
             return res.status(400).json({
                 success: false,
-                message: "Processor ID, activation key, and motherboard serial are required",
+                activationStatus: "Processor ID, activation key, and motherboard serial are required",
             });
         }
 
@@ -79,20 +79,18 @@ export const checkActivation = async (req, res) => {
         if (!device) {
             return res.status(404).json({
                 success: false,
-                message: "Device not found",
+                activationStatus: "Device not found",
             });
         }
 
         res.status(200).json({
             success: true,
-            data: {
-                activationStatus: device.deviceStatus,
-            },
+            activationStatus: device.deviceStatus,
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Error checking activation",
+            activationStatus: "Error checking activation",
             error: error.message,
         });
     }
