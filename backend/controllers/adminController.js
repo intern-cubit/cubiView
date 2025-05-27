@@ -92,32 +92,43 @@ export const addDevice = async (req, res) => {
 };
 
 export const add_device = async (req, res) => {
-    const { macId, motherboardSerial } = req.body;
+    const { macId, motherboardSerial, name } = req.body;
     const { id: adminId } = req.user;
 
     try {
+        if (!macId || !motherboardSerial) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
         const existingDevice = await Device.findOne({
             macId,
             motherboardSerial,
         });
-        if (!macId || !motherboardSerial) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
+
         if (existingDevice) {
             return res.status(400).json({ message: "Device already exists" });
         }
+
         const activationKey = generateActivationKey(macId, motherboardSerial);
         if (!activationKey) {
             return res.status(400).json({ message: "Invalid IMEI" });
         }
-        const device = new Device({
+
+        const deviceData = {
             macId,
             motherboardSerial,
             activationKey,
             adminId,
-        });
+        };
+
+        if (name && name.trim() !== "") {
+            deviceData.name = name.trim();
+        }
+
+        const device = new Device(deviceData);
         await device.save();
-        return res.status(201).json(device);
+
+        return res.status(201).json({ device });
     } catch (error) {
         console.error("Add device error:", error);
         res.status(500).json({ message: "Server Error" });

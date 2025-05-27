@@ -17,6 +17,9 @@ const deviceSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
+        name: {
+            type: String,
+        },
         adminId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

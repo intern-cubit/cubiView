@@ -15,14 +15,9 @@ export default function SuperAdminDashboard() {
     const navigate = useNavigate();
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
-    // Fetch dashboard data
     useEffect(() => {
         fetchDashboardData();
     }, []);
-
-    // useEffect(() => {
-    //     console.log(generatedCoupons);
-    // }, [generatedCoupons]);
 
     const fetchDashboardData = async () => {
         setLoading(true);
@@ -97,7 +92,6 @@ export default function SuperAdminDashboard() {
         showNotification('Coupons downloaded as CSV', 'success');
     };
 
-    // Filter devices based on search term
     const filteredDevices = dashboardData.devices.filter(device =>
         device.macId.toLowerCase().includes(searchTerm.toLowerCase()) ||
         device.activationKey.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -105,14 +99,12 @@ export default function SuperAdminDashboard() {
         device.deviceStatus.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Filter admins based on search term
     const filteredAdmins = dashboardData.admins.filter(admin =>
         admin.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
         admin.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         admin.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Format date string to readable format
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -155,14 +147,12 @@ export default function SuperAdminDashboard() {
 
     return (
         <div className="min-h-screen bg-black">
-            {/* Header */}
             <header className="bg-gray-900 shadow">
                 <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                     <h1 className="text-2xl font-bold tracking-tight text-amber-500">Super Admin Dashboard</h1>
                 </div>
             </header>
 
-            {/* Notification */}
             {notification.show && (
                 <div className={`fixed right-4 top-4 z-50 rounded-md p-4 shadow-lg ${notification.type === 'success' ? 'bg-gray-800 text-green-300' : 'bg-gray-800 text-red-300'
                     }`}>
@@ -181,9 +171,7 @@ export default function SuperAdminDashboard() {
                 </div>
             )}
 
-            {/* Main Content */}
             <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                {/* Dashboard Stats */}
                 <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
                     <div className="overflow-hidden rounded-lg bg-gray-900 shadow">
                         <div className="px-4 py-5 sm:p-6">
@@ -234,7 +222,6 @@ export default function SuperAdminDashboard() {
                     </div>
                 </div>
 
-                {/* Tabs */}
                 <div className="mb-6 border-b border-gray-800">
                     <nav className="-mb-px flex space-x-8">
                         <button
@@ -276,7 +263,6 @@ export default function SuperAdminDashboard() {
                     </nav>
                 </div>
 
-                {/* Search */}
                 {activeTab !== 'coupons' && (
                     <div className="mb-6">
                         <div className="relative mt-1 rounded-md shadow-sm">
