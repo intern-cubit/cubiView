@@ -14,7 +14,7 @@ export default function SuperAdminDashboard() {
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const navigate = useNavigate()
 
-    const BACKEND_URL = 'http://localhost:5000'; // You can make this configurable
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
     useEffect(() => {
         fetchDashboardData();
