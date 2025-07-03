@@ -4,8 +4,7 @@ import { useDispatch } from "react-redux";
 import { addDeviceSuccess } from "../features/deviceSlice";
 
 export default function AddDeviceForm() {
-    const [macId, setmacId] = useState("");
-    const [motherboardSerial, setMotherboardSerial] = useState("");
+    const [systemId, setSystemId] = useState("");
     const [message, setMessage] = useState("");
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
     const navigate = useNavigate();
@@ -22,7 +21,7 @@ export default function AddDeviceForm() {
                     authorization: `Bearer ${localStorage.getItem("token")}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ macId, motherboardSerial }),
+                body: JSON.stringify({ systemId }),
             });
 
             const data = await response.json();
@@ -53,27 +52,13 @@ export default function AddDeviceForm() {
 
             <div>
                 <label className="block mb-1 font-medium text-sm text-white">
-                    Processor ID
+                    System ID
                 </label>
                 <input
-                    name="macId"
-                    value={macId}
-                    onChange={(e) => setmacId(e.target.value)}
+                    name="systemId"
+                    value={systemId}
+                    onChange={(e) => setSystemId(e.target.value)}
                     placeholder="e.g., PROC123456789"
-                    required
-                    className="w-full px-4 py-2 border border-amber-400 bg-black text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
-            </div>
-
-            <div>
-                <label className="block mb-1 font-medium text-sm text-white">
-                    Motherboard Serial
-                </label>
-                <input
-                    name="motherboardSerial"
-                    value={motherboardSerial}
-                    onChange={(e) => setMotherboardSerial(e.target.value)}
-                    placeholder="e.g., MB987654321"
                     required
                     className="w-full px-4 py-2 border border-amber-400 bg-black text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />

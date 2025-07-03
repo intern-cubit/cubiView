@@ -131,7 +131,7 @@ const DeviceCard = memo(({ device, index }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
             whileHover={{ y: -2, scale: 1.02 }}
-            onClick={() => navigate(`/device/${device.macId}`)}
+            onClick={() => navigate(`/device/${device.systemId}`)}
         >
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
@@ -141,9 +141,9 @@ const DeviceCard = memo(({ device, index }) => {
                     </div>
                     <div>
                         <h3 className="font-mono text-sm lg:text-base font-semibold text-white group-hover:text-purple-300 transition-colors">
-                            {device.name || device.macId}
+                            {device.name || device.systemId}
                         </h3>
-                        <p className="text-xs text-gray-400">{device.name ? device.macId : "Device ID"}</p>
+                        <p className="text-xs text-gray-400">{device.name ? device.systemId : "Device ID"}</p>
                     </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -264,7 +264,7 @@ const Dashboard = () => {
 
         if (searchTerm) {
             filtered = filtered.filter(device =>
-                device.macId.toLowerCase().includes(searchTerm.toLowerCase())
+                device.systemId.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
 
@@ -490,7 +490,7 @@ const Dashboard = () => {
                                     transition={{ duration: 0.2 }}
                                 >
                                     {filteredDevices.map((device, index) => (
-                                        <DeviceCard key={device.macId} device={device} index={index} />
+                                        <DeviceCard key={device.systemId} device={device} index={index} />
                                     ))}
                                 </motion.div>
                             </AnimatePresence>

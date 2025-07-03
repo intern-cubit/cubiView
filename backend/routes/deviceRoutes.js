@@ -6,7 +6,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 const router = Router();
 
 router.post('/verify-device', verifyDevice);
-router.get('/:macId', getDeviceDetails); 
+router.get('/:systemId', getDeviceDetails); 
 router.post('/report', uploadZip, uploadReport);
 router.post('/download-report', authMiddleware, downloadReport)
 

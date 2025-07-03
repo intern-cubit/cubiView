@@ -27,7 +27,7 @@ export const verifyPayment = async (req, res) => {
         razorpay_order_id,
         razorpay_payment_id,
         razorpay_signature,
-        macId,
+        systemId,
     } = req.body;
 
     const generatedSignature = crypto
@@ -39,7 +39,7 @@ export const verifyPayment = async (req, res) => {
         const activationKey = crypto.randomBytes(8).toString("hex");
 
         await Device.findOneAndUpdate(
-            { macId },
+            { systemId },
             { activationKey, paymentStatus: "paid" },
             { upsert: true, new: true }
         );
@@ -53,27 +53,25 @@ export const verifyPayment = async (req, res) => {
 };
 
 export const addDevice = async (req, res) => {
-    const { macId, motherboardSerial } = req.body;
+    const { systemId } = req.body;
     const { id: adminId } = req.user;
 
     try {
         const existingDevice = await Device.findOne({
-            macId,
-            motherboardSerial,
+            systemId
         });
-        if (!macId || !motherboardSerial) {
+        if (!systemId) {
             return res.status(400).json({ message: "All fields are required" });
         }
         if (existingDevice) {
             return res.status(400).json({ message: "Device already exists" });
         }
-        const activationKey = generateActivationKey(macId, motherboardSerial);
+        const activationKey = generateActivationKey(systemId);
         if (!activationKey) {
             return res.status(400).json({ message: "Invalid IMEI" });
         }
         const device = new Device({
-            macId,
-            motherboardSerial,
+            systemId,
             activationKey,
             adminId,
         });
@@ -92,31 +90,29 @@ export const addDevice = async (req, res) => {
 };
 
 export const add_device = async (req, res) => {
-    const { macId, motherboardSerial, name } = req.body;
+    const { systemId, name } = req.body;
     const { id: adminId } = req.user;
 
     try {
-        if (!macId || !motherboardSerial) {
+        if (!systemId) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
         const existingDevice = await Device.findOne({
-            macId,
-            motherboardSerial,
+            systemId
         });
 
         if (existingDevice) {
             return res.status(400).json({ message: "Device already exists" });
         }
 
-        const activationKey = generateActivationKey(macId, motherboardSerial);
+        const activationKey = generateActivationKey(systemId);
         if (!activationKey) {
             return res.status(400).json({ message: "Invalid IMEI" });
         }
 
         const deviceData = {
-            macId,
-            motherboardSerial,
+            systemId,
             activationKey,
             adminId,
         };
@@ -137,11 +133,11 @@ export const add_device = async (req, res) => {
 
 export const deleteDevice = async (req, res) => {
     const { id: adminId } = req.user;
-    const { macId } = req.params;
+    const { systemId } = req.params;
 
     try {
         const device = await Device.findOneAndDelete({
-            macId,
+            systemId,
             adminId,
         });
         if (!device) {

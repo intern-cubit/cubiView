@@ -93,7 +93,7 @@ export default function SuperAdminDashboard() {
     };
 
     const filteredDevices = dashboardData.devices.filter(device =>
-        device.macId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        device.systemId.toLowerCase().includes(searchTerm.toLowerCase()) ||
         device.activationKey.toLowerCase().includes(searchTerm.toLowerCase()) ||
         device.paymentStatus.toLowerCase().includes(searchTerm.toLowerCase()) ||
         device.deviceStatus.toLowerCase().includes(searchTerm.toLowerCase())
@@ -311,8 +311,8 @@ export default function SuperAdminDashboard() {
                                             filteredDevices.map((device) => {
                                                 const admin = dashboardData.admins.find(a => a._id === device.adminId) || { fullName: 'Unknown' };
                                                 return (
-                                                    <tr key={device._id} className="hover:bg-gray-700/30 transition-colors cursor-pointer" onClick={() => navigate(`/device/${device.macId}`)}>
-                                                        <td className="px-6 py-4 text-sm font-medium text-white">{device.macId}</td>
+                                                    <tr key={device._id} className="hover:bg-gray-700/30 transition-colors cursor-pointer" onClick={() => navigate(`/device/${device.systemId}`)}>
+                                                        <td className="px-6 py-4 text-sm font-medium text-white">{device.systemId}</td>
                                                         <td className="px-6 py-4 text-sm text-gray-300">{device.activationKey}</td>
                                                         <td className="px-6 py-4 text-sm text-gray-300">{admin.fullName}</td>
                                                         <td className="px-6 py-4 text-sm">

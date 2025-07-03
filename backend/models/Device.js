@@ -2,12 +2,7 @@ import mongoose from "mongoose";
 
 const deviceSchema = new mongoose.Schema(
     {
-        macId: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-        motherboardSerial: {
+        systemId: {
             type: String,
             required: true,
             unique: true,

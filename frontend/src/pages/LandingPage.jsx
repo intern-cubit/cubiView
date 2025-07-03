@@ -157,7 +157,7 @@ export default function LandingPage() {
                             {
                                 icon: Users,
                                 title: 'Admin Onboarding',
-                                description: 'Streamlined sign-up process, easy device registration by MAC/Processor ID, and secure payment integration.'
+                                description: 'Streamlined sign-up process, easy device registration by MAC/System ID, and secure payment integration.'
                             },
                             {
                                 icon: BarChart3,
@@ -218,7 +218,7 @@ export default function LandingPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 relative z-10">
                             {[
                                 { title: 'Sign Up', description: 'Create your account with basic information' },
-                                { title: 'Add Device', description: 'Register devices using MAC ID or processor ID' },
+                                { title: 'Add Device', description: 'Register devices using MAC ID or System ID' },
                                 { title: 'Payment', description: 'Choose a plan and complete secure payment' },
                                 { title: 'Activate', description: 'Activate your devices with generated keys' },
                                 { title: 'Get Reports', description: 'Access and download detailed reports' }

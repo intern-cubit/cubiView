@@ -65,16 +65,16 @@ export const generateCoupons = async (req, res) => {
 
 export const checkActivation = async (req, res) => {
     try {
-        const { processorId, activationKey, motherboardSerial } = req.body;
+        const { systemId, activationKey } = req.body;
 
-        if (!processorId || !activationKey || !motherboardSerial) {
+        if (!systemId || !activationKey) {
             return res.status(400).json({
                 success: false,
-                activationStatus: "Processor ID, activation key, and motherboard serial are required",
+                activationStatus: "System ID, activation key, and motherboard serial are required",
             });
         }
 
-        const device = await Device.findOne({macId: processorId, activationKey, motherboardSerial});
+        const device = await Device.findOne({systemId, activationKey});
 
         if (!device) {
             return res.status(404).json({

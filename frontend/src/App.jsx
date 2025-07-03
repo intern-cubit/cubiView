@@ -52,7 +52,7 @@ const App = () => {
                     element={<AddDevicePage />}
                 />
                 <Route
-                    path="/device/:macId"
+                    path="/device/:systemId"
                     // element={isAuth ? <DeviceDetails /> : <Navigate to={"/login"} />}
                     element={<DeviceDetails />}
                 />

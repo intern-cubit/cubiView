@@ -30,12 +30,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function DeviceDetails() {
-    const { macId } = useParams();
+    const { systemId } = useParams();
     const navigate = useNavigate();
 
     const [device, setDevice] = useState({
         _id: "",
-        macId: "",
+        systemId: "",
         activationKey: "",
         adminId: "",
         deviceStatus: "",
@@ -62,7 +62,7 @@ export default function DeviceDetails() {
         const fetchDeviceDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${BACKEND_URL}/api/device/${macId}`, {
+                const response = await fetch(`${BACKEND_URL}/api/device/${systemId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export default function DeviceDetails() {
         };
 
         fetchDeviceDetails();
-    }, [macId]);
+    }, [systemId]);
 
     // Format date to be more readable
     const formatDate = (dateString) => {
@@ -170,7 +170,7 @@ export default function DeviceDetails() {
 
     // Handle navigation back to dashboard
     const handleBackToDashboard = () => {
-        navigate("/dashboard");
+        navigate(-1);
     };
 
     // Handle date change
@@ -191,7 +191,7 @@ export default function DeviceDetails() {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({
-                    macId: device.macId,
+                    systemId: device.systemId,
                     adminId: device.adminId,
                     date: selectedDate,
                 }),
@@ -203,7 +203,7 @@ export default function DeviceDetails() {
             }
 
             const { downloadUrl } = await response.json();
-            await handleDownload(downloadUrl, device.macId);
+            await handleDownload(downloadUrl, device.systemId);
 
         } catch (error) {
             setDownloadError(error.message);
@@ -213,7 +213,7 @@ export default function DeviceDetails() {
         }
     };
 
-    const handleDownload = async (url, macId) => {
+    const handleDownload = async (url, systemId) => {
         try {
             const res = await fetch(url);
             if (!res.ok) throw new Error('Could not fetch the ZIP file');
@@ -221,7 +221,7 @@ export default function DeviceDetails() {
             const blob = await res.blob();
             const blobUrl = window.URL.createObjectURL(blob);
             const ts = new Date().toISOString().replace(/[:.]/g, '-');
-            const fileName = `report_${macId}_${ts}.zip`;
+            const fileName = `report_${systemId}_${ts}.zip`;
 
             const link = document.createElement('a');
             link.href = blobUrl;
@@ -243,7 +243,7 @@ export default function DeviceDetails() {
         setDeleteError(null);
 
         try {
-            const response = await fetch(`${BACKEND_URL}/api/admin/delete-device/${macId}`, {
+            const response = await fetch(`${BACKEND_URL}/api/admin/delete-device/${systemId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -327,7 +327,7 @@ export default function DeviceDetails() {
                                     <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                                         Device Details
                                     </h1>
-                                    <p className="text-gray-300 mt-1">MAC ID: {device.macId}</p>
+                                    <p className="text-gray-300 mt-1">MAC ID: {device.systemId}</p>
                                 </div>
                             </div>
 
@@ -460,16 +460,16 @@ export default function DeviceDetails() {
                                                     <div className="flex items-center justify-between mb-2">
                                                         <div className="flex items-center">
                                                             <Wifi size={18} className="text-purple-400 mr-2" />
-                                                            <span className="text-sm font-medium text-gray-400">MAC ID</span>
+                                                            <span className="text-sm font-medium text-gray-400">System ID</span>
                                                         </div>
                                                         <button
-                                                            onClick={() => copyToClipboard(device.macId, "MAC ID")}
+                                                            onClick={() => copyToClipboard(device.systemId, "System ID")}
                                                             className="text-gray-400 hover:text-purple-400 transition-colors"
                                                         >
                                                             <Copy size={16} />
                                                         </button>
                                                     </div>
-                                                    <p className="text-white font-mono text-sm break-all">{device.macId}</p>
+                                                    <p className="text-white font-mono text-sm break-all">{device.systemId}</p>
                                                 </div>
 
                                                 {/* Activation Key */}
@@ -487,23 +487,6 @@ export default function DeviceDetails() {
                                                         </button>
                                                     </div>
                                                     <p className="text-white font-mono text-sm break-all">{device.activationKey}</p>
-                                                </div>
-
-                                                {/* Device ID */}
-                                                <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
-                                                    <div className="flex items-center justify-between mb-2">
-                                                        <div className="flex items-center">
-                                                            <Hash size={18} className="text-purple-400 mr-2" />
-                                                            <span className="text-sm font-medium text-gray-400">Device ID</span>
-                                                        </div>
-                                                        <button
-                                                            onClick={() => copyToClipboard(device._id, "Device ID")}
-                                                            className="text-gray-400 hover:text-purple-400 transition-colors"
-                                                        >
-                                                            <Copy size={16} />
-                                                        </button>
-                                                    </div>
-                                                    <p className="text-white font-mono text-sm break-all">{device._id}</p>
                                                 </div>
                                             </div>
                                         </motion.div>
@@ -683,7 +666,7 @@ export default function DeviceDetails() {
                                     </p>
                                     <div className="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
                                         <p className="text-sm text-gray-400">MAC ID:</p>
-                                        <p className="font-mono text-yellow-400 break-all">{device.macId}</p>
+                                        <p className="font-mono text-yellow-400 break-all">{device.systemId}</p>
                                     </div>
                                 </div>
 

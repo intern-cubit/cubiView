@@ -4,8 +4,7 @@ import { X } from "lucide-react";
 import { addDeviceSuccess } from "../features/deviceSlice";
 
 const AddDeviceModal = ({ isOpen, onClose }) => {
-    const [macId, setMacId] = useState("");
-    const [motherboardSerial, setMotherboardSerial] = useState("");
+    const [systemId, setSystemId] = useState("");
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -19,8 +18,7 @@ const AddDeviceModal = ({ isOpen, onClose }) => {
 
         try {
             const payload = {
-                macId,
-                motherboardSerial,
+                systemId,
             };
 
             if (name.trim() !== "") {
@@ -44,8 +42,7 @@ const AddDeviceModal = ({ isOpen, onClose }) => {
             dispatch(addDeviceSuccess(data.device));
             setTimeout(() => {
                 onClose();
-                setMacId("");
-                setMotherboardSerial("");
+                setSystemId("");
                 setMessage("");
             }, 2000);
 
@@ -83,27 +80,13 @@ const AddDeviceModal = ({ isOpen, onClose }) => {
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Processor ID
+                            System ID
                         </label>
                         <input
                             type="text"
-                            value={macId}
-                            onChange={(e) => setMacId(e.target.value)}
+                            value={systemId}
+                            onChange={(e) => setSystemId(e.target.value)}
                             placeholder="e.g., PROC123456789"
-                            required
-                            className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Motherboard Serial
-                        </label>
-                        <input
-                            type="text"
-                            value={motherboardSerial}
-                            onChange={(e) => setMotherboardSerial(e.target.value)}
-                            placeholder="e.g., MB987654321"
                             required
                             className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         />

@@ -3,13 +3,13 @@ import Report from "../models/Report.js";
 import cloudinary from "../config/cloudinary.js";
 
 export const verifyDevice = async (req, res) => {
-    const { macId, activationKey } = req.body;
+    const { systemId, activationKey } = req.body;
 
-    if (!macId || !activationKey) {
+    if (!systemId || !activationKey) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
-    const device = await Device.findOne({ macId, activationKey });
+    const device = await Device.findOne({ systemId, activationKey });
     if (!device) {
         return res
             .status(400)
@@ -21,9 +21,9 @@ export const verifyDevice = async (req, res) => {
 };
 
 export const getDeviceDetails = async (req, res) => {
-    const { macId } = req.params;
+    const { systemId } = req.params;
     try {
-        const device = await Device.findOne({ macId });
+        const device = await Device.findOne({ systemId });
         if (!device) {
             return res.status(404).json({ message: "Device not found" });
         }
@@ -36,15 +36,15 @@ export const getDeviceDetails = async (req, res) => {
 
 export const uploadReport = async (req, res) => {
     try {
-        const { macId } = req.body;
-        if (!macId) {
-            return res.status(400).json({ error: "macId is required" });
+        const { systemId } = req.body;
+        if (!systemId) {
+            return res.status(400).json({ error: "systemId is required" });
         }
         if (!req.file) {
             return res.status(400).json({ error: "ZIP file is required" });
         }
 
-        const device = await Device.findOne({ macId });
+        const device = await Device.findOne({ systemId });
         if (!device) {
             return res.status(404).json({ error: "Device not found" });
         }
@@ -81,16 +81,16 @@ export const uploadReport = async (req, res) => {
 
 export const downloadReport = async (req, res) => {
     try {
-        const { macId, date } = req.body;
+        const { systemId, date } = req.body;
         const user = req.user;
 
         if (!user) return res.status(401).json({ error: "Unauthorized" });
-        if (!macId || !date)
+        if (!systemId || !date)
             return res
                 .status(400)
-                .json({ error: "macId and date are required" });
+                .json({ error: "systemId and date are required" });
 
-        const device = await Device.findOne({ macId });
+        const device = await Device.findOne({ systemId });
         if (!device) return res.status(404).json({ error: "Device not found" });
 
         const startOfDay = new Date(date);

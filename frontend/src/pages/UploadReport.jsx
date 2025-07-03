@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const UploadReport = () => {
-    const [macId, setMacId] = useState('');
+    const [systemId, setSystemId] = useState('');
     const [file, setFile] = useState(null);
     const [uploadUrl, setUploadUrl] = useState('');
     const [loading, setLoading] = useState(false);
@@ -9,13 +9,13 @@ const UploadReport = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!macId || !file) {
+        if (!systemId || !file) {
             alert('Hey, don\'t forget the MAC ID and a .zip file!');
             return;
         }
 
         const formData = new FormData();
-        formData.append('macId', macId);
+        formData.append('systemId', systemId);
         formData.append('reportZip', file);
 
         try {
@@ -49,7 +49,7 @@ const UploadReport = () => {
             const link = document.createElement('a');
             link.href = blobUrl;
             const ts = new Date().toISOString().replace(/[:.]/g, '-');
-            link.setAttribute('download', `report_${macId}_${ts}.zip`);
+            link.setAttribute('download', `report_${systemId}_${ts}.zip`);
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -84,8 +84,8 @@ const UploadReport = () => {
                         <span className="text-sm font-medium text-yellow-500">MAC ID</span>
                         <input
                             type="text"
-                            value={macId}
-                            onChange={(e) => setMacId(e.target.value)}
+                            value={systemId}
+                            onChange={(e) => setSystemId(e.target.value)}
                             className="mt-1 block w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-white focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
                             placeholder="0123456789"
                         />

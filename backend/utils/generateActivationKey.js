@@ -1,7 +1,7 @@
 import crypto from "crypto"; 
 
-export const generateActivationKey = (macId, motherboardSerial) => {
-    const input = `${macId}:${motherboardSerial}`.toUpperCase(); 
+export const generateActivationKey = (systemId) => {
+    const input = `${systemId}`.toUpperCase(); 
 
     const hash = crypto
         .createHash("sha256")
