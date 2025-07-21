@@ -4,7 +4,7 @@ export const generateActivationKey = (systemId) => {
     const input = `${systemId}`.toUpperCase(); 
 
     const hash = crypto
-        .createHash("sha256")
+        .createHash("ripemd160")
         .update(input)
         .digest("hex")
         .toUpperCase();
