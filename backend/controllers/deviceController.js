@@ -106,7 +106,7 @@ export const downloadReport = async (req, res) => {
                 $gte: startOfDay,
                 $lte: endOfDay,
             },
-        });
+        }).sort({ reportDate: -1 });
 
         if (!report) return res.status(404).json({ error: "Report not found" });
 
