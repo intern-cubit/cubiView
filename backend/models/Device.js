@@ -25,6 +25,23 @@ const deviceSchema = new mongoose.Schema(
             enum: ["paid", "unpaid"],
             default: "unpaid",
         },
+        basePayment: {
+            type: Boolean,
+            default: false,
+        },
+        isPremium: {
+            type: Boolean,
+            default: false,
+        },
+        premiumPlan: {
+            type: String,
+            enum: ["7days", "15days", "30days", "1year"],
+            default: null,
+        },
+        premiumExpiryDate: {
+            type: Date,
+            default: null,
+        },
         deviceStatus: {
             type: String,
             enum: ["active", "inactive"],

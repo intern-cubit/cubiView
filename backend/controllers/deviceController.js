@@ -93,6 +93,26 @@ export const downloadReport = async (req, res) => {
         const device = await Device.findOne({ systemId });
         if (!device) return res.status(404).json({ error: "Device not found" });
 
+        // Check if device has premium access for downloading reports
+        if (!device.isPremium) {
+            return res.status(403).json({ 
+                error: "Premium subscription required to download reports. Please upgrade to premium to access this feature." 
+            });
+        }
+
+        // Check if premium has expired
+        if (device.premiumExpiryDate && new Date() > device.premiumExpiryDate) {
+            // Update device status
+            device.isPremium = false;
+            device.premiumPlan = null;
+            device.premiumExpiryDate = null;
+            await device.save();
+            
+            return res.status(403).json({ 
+                error: "Premium subscription has expired. Please renew your subscription to download reports." 
+            });
+        }
+
         const startOfDay = new Date(date);
         startOfDay.setUTCHours(0, 0, 0, 0);
 

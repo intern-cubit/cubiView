@@ -25,8 +25,9 @@ import {
     MoreVertical
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence, animate } from 'framer-motion';
+import { fetchDevicesSuccess } from '../features/deviceSlice';
 import AddDeviceModal from '../components/AddDeviceModal';
 // Custom AnimatedNumber using Framer Motion's animate API
 const AnimatedNumber = ({ value }) => {
@@ -227,6 +228,8 @@ const Dashboard = () => {
     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
     const storedUser = localStorage.getItem('user');
     const reduxUser = useSelector((s) => s.auth.user);
+    const reduxDevices = useSelector((s) => s.device.devices);
+    const dispatch = useDispatch();
     const [user] = useState(storedUser ? JSON.parse(storedUser) : reduxUser);
     const [devices, setDevices] = useState([]);
     const [filteredDevices, setFilteredDevices] = useState([]);
@@ -237,26 +240,38 @@ const Dashboard = () => {
     const [viewMode, setViewMode] = useState('grid');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const fetchDevices = async () => {
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/admin/get-devices`, {
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!res.ok) throw new Error('Fetch failed');
+            const data = await res.json();
+            setDevices(data || []);
+            setFilteredDevices(data || []);
+            // Update Redux store as well
+            dispatch(fetchDevicesSuccess(data || []));
+        } catch {
+            setError('Failed to load dashboard data');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        (async () => {
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/get-devices`, {
-                    headers: {
-                        authorization: `Bearer ${localStorage.getItem('token')}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!res.ok) throw new Error('Fetch failed');
-                const data = await res.json();
-                setDevices(data || []);
-                setFilteredDevices(data || []);
-            } catch {
-                setError('Failed to load dashboard data');
-            } finally {
-                setLoading(false);
-            }
-        })();
+        fetchDevices();
     }, [BACKEND_URL]);
+
+    // Update local devices when Redux devices change (e.g., when device is added)
+    useEffect(() => {
+        if (reduxDevices.length > 0) {
+            setDevices(reduxDevices);
+            setFilteredDevices(reduxDevices);
+        }
+    }, [reduxDevices]);
 
     // Filter devices based on search and status
     useEffect(() => {
@@ -264,7 +279,8 @@ const Dashboard = () => {
 
         if (searchTerm) {
             filtered = filtered.filter(device =>
-                device.systemId.toLowerCase().includes(searchTerm.toLowerCase())
+                device.systemId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (device.name && device.name.toLowerCase().includes(searchTerm.toLowerCase()))
             );
         }
 
@@ -523,6 +539,7 @@ const Dashboard = () => {
             <AddDeviceModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                onDeviceAdded={fetchDevices}
             />
         </div>
     );
