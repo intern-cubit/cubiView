@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Check, Copy, Download, Users, Smartphone, Tag, Search, RefreshCw, PlusCircle, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { CircleLoader, PulseLoader } from 'react-spinners';
 
 export default function SuperAdminDashboard() {
     const [loading, setLoading] = useState(true);
@@ -120,7 +121,11 @@ export default function SuperAdminDashboard() {
         return (
             <div className="flex h-screen items-center justify-center bg-gradient-to-br from-[#111827] via-black to-[#10151b]">
                 <div className="flex flex-col items-center">
-                    <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+                    <CircleLoader 
+                        color="#8b5cf6" 
+                        size={48}
+                        loading={true}
+                    />
                     <p className="mt-4 text-lg bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Loading dashboard data...</p>
                 </div>
             </div>
@@ -414,7 +419,12 @@ export default function SuperAdminDashboard() {
                                         >
                                             {generatingCoupons ? (
                                                 <>
-                                                    <RefreshCw className="mr-2 h-5 w-5 animate-spin" />
+                                                    <PulseLoader 
+                                                        color="#ffffff" 
+                                                        size={6}
+                                                        loading={true}
+                                                        cssOverride={{ marginRight: '8px' }}
+                                                    />
                                                     Generating...
                                                 </>
                                             ) : (

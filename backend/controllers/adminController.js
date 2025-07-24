@@ -181,8 +181,9 @@ export const getDevices = async (req, res) => {
     try {
         // Check and update expired premium subscriptions
         await checkPremiumExpiry();
-        
+        console.log(adminId, "Admin ID from request");
         const devices = await Device.find({ adminId });
+        console.log(devices);
         return res.status(200).json(devices);
     } catch (error) {
         console.error("Get devices error:", error);

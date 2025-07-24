@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, Layers, Lock, Zap, BarChart3, Users, Menu, X } from 'lucide-react';
+import { ChevronRight, Layers, Lock, Zap, BarChart3, Users, Menu, X, Star, ArrowRight, Play, Shield, Globe, Headphones } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
+import { Button, Card } from '../components/ui';
 
 export default function LandingPage() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [activeFeature, setActiveFeature] = useState(0);
+    const { isDark } = useTheme();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -15,6 +21,13 @@ export default function LandingPage() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveFeature((prev) => (prev + 1) % 6);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, []);
+
     const scrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -23,216 +36,506 @@ export default function LandingPage() {
         }
     };
 
+    const features = [
+        {
+            icon: Layers,
+            title: 'Super Admin Control',
+            description: 'Complete oversight with advanced admin panel, user management, and detailed audit trails.',
+            color: 'from-blue-500 to-cyan-500'
+        },
+        {
+            icon: Users,
+            title: 'Seamless Onboarding',
+            description: 'Streamlined registration process with easy device setup and secure payment integration.',
+            color: 'from-purple-500 to-pink-500'
+        },
+        {
+            icon: BarChart3,
+            title: 'Advanced Analytics',
+            description: 'Real-time insights with comprehensive reports and data visualization.',
+            color: 'from-green-500 to-emerald-500'
+        },
+        {
+            icon: Zap,
+            title: 'Real-time Monitoring',
+            description: 'Instant notifications and live status updates across your entire device fleet.',
+            color: 'from-yellow-500 to-orange-500'
+        },
+        {
+            icon: Shield,
+            title: 'Enterprise Security',
+            description: 'Military-grade encryption with comprehensive role-based access controls.',
+            color: 'from-red-500 to-rose-500'
+        },
+        {
+            icon: Globe,
+            title: 'Global Integration',
+            description: 'Seamless API integration with your existing systems and workflows.',
+            color: 'from-indigo-500 to-blue-500'
+        }
+    ];
+
+    const stats = [
+        { number: '10K+', label: 'Devices Managed', icon: Layers },
+        { number: '500+', label: 'Enterprise Clients', icon: Users },
+        { number: '99.9%', label: 'Uptime Guarantee', icon: Shield },
+        { number: '24/7', label: 'Expert Support', icon: Headphones }
+    ];
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#111827] via-black to-[#10151b] text-white">
+        <div className={`min-h-screen transition-colors duration-300 ${
+            isDark 
+                ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' 
+                : 'bg-gradient-to-br from-gray-50 via-white to-blue-50'
+        }`}>
             {/* Navigation */}
-            <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-[rgba(30,30,30,0.9)] backdrop-blur-md py-3 shadow-lg border-b border-gray-800' : 'bg-transparent py-4'}`}>
+            <motion.nav 
+                className={`fixed w-full z-50 transition-all duration-300 ${
+                    isScrolled 
+                        ? isDark 
+                            ? 'bg-gray-900/95 backdrop-blur-md py-3 shadow-lg border-b border-gray-800' 
+                            : 'bg-white/95 backdrop-blur-md py-3 shadow-lg border-b border-gray-200'
+                        : 'bg-transparent py-4'
+                }`}
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <span className="text-2xl font-bold text-white">
-                                <span className="text-[#6a5acd]">Cubi</span>View
+                        <motion.div 
+                            className="flex items-center space-x-2"
+                            whileHover={{ scale: 1.05 }}
+                        >
+                            <img 
+                                src="/cubiview-logo.png" 
+                                alt="CubiView Logo" 
+                                className="w-8 h-8"
+                                onError={(e) => {
+                                    // Fallback to gradient background if logo fails to load
+                                    e.target.style.display = 'none';
+                                    e.target.nextElementSibling.style.display = 'flex';
+                                }}
+                            />
+                            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center" style={{display: 'none'}}>
+                                <span className="text-white font-bold text-sm">C</span>
+                            </div>
+                            <span className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                <span className="text-gradient">Cubi</span>View
                             </span>
-                        </div>
+                        </motion.div>
 
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center space-x-8">
-                            <button onClick={() => scrollToSection('features')} className="hover:text-[#6a5acd] transition-colors duration-300">Features</button>
-                            <button onClick={() => scrollToSection('workflow')} className="hover:text-[#6a5acd] transition-colors duration-300">How It Works</button>
-                            <button onClick={() => scrollToSection('demo')} className="hover:text-[#6a5acd] transition-colors duration-300">Demo</button>
+                            {['Features', 'How It Works', 'Pricing', 'Demo'].map((item, index) => (
+                                <motion.button
+                                    key={item}
+                                    onClick={() => scrollToSection(item.toLowerCase().replace(' ', '-'))}
+                                    className={`font-medium transition-colors duration-300 ${
+                                        isDark 
+                                            ? 'text-gray-300 hover:text-blue-400' 
+                                            : 'text-gray-600 hover:text-blue-600'
+                                    }`}
+                                    whileHover={{ y: -2 }}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    {item}
+                                </motion.button>
+                            ))}
                         </div>
 
                         <div className="hidden md:flex items-center space-x-4">
-                            <Link to={"/register"} className="bg-[#6a5acd] hover:bg-[#5a4abd] text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)]">
-                                Sign Up
+                            <ThemeToggle />
+                            <Link to="/login">
+                                <Button variant="ghost" size="sm">
+                                    Sign In
+                                </Button>
                             </Link>
-                            <Link to={"/login"} className="bg-[#6a5acd] hover:bg-[#5a4abd] text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)]">
-                                Sign In
+                            <Link to="/register">
+                                <Button size="sm" icon={<ArrowRight size={16} />}>
+                                    Get Started
+                                </Button>
                             </Link>
                         </div>
 
                         {/* Mobile menu button */}
-                        <div className="md:hidden">
-                            <button
+                        <div className="md:hidden flex items-center space-x-2">
+                            <ThemeToggle />
+                            <motion.button
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="text-white hover:text-[#6a5acd] transition-colors duration-300"
+                                className={`p-2 rounded-lg transition-colors ${
+                                    isDark 
+                                        ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
+                                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                }`}
+                                whileTap={{ scale: 0.95 }}
                             >
                                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                            </button>
+                            </motion.button>
                         </div>
                     </div>
 
                     {/* Mobile Navigation */}
-                    {mobileMenuOpen && (
-                        <div className="md:hidden mt-4 pb-4 border-t border-gray-800">
-                            <div className="flex flex-col space-y-4 pt-4">
-                                <button onClick={() => scrollToSection('features')} className="text-left hover:text-[#6a5acd] transition-colors duration-300">Features</button>
-                                <button onClick={() => scrollToSection('workflow')} className="text-left hover:text-[#6a5acd] transition-colors duration-300">How It Works</button>
-                                <button onClick={() => scrollToSection('demo')} className="text-left hover:text-[#6a5acd] transition-colors duration-300">Demo</button>
-                                <button className="bg-[#6a5acd] hover:bg-[#5a4abd] text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)] w-full">
-                                    Sign In
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                    <AnimatePresence>
+                        {mobileMenuOpen && (
+                            <motion.div
+                                className="md:hidden mt-4 pb-4 border-t border-opacity-20"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className="flex flex-col space-y-4 pt-4">
+                                    {['Features', 'How It Works', 'Pricing', 'Demo'].map((item) => (
+                                        <button
+                                            key={item}
+                                            onClick={() => scrollToSection(item.toLowerCase().replace(' ', '-'))}
+                                            className={`text-left font-medium transition-colors ${
+                                                isDark 
+                                                    ? 'text-gray-300 hover:text-blue-400' 
+                                                    : 'text-gray-600 hover:text-blue-600'
+                                            }`}
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                    <div className="flex flex-col space-y-2 pt-2">
+                                        <Link to="/login">
+                                            <Button variant="ghost" size="sm" className="w-full">
+                                                Sign In
+                                            </Button>
+                                        </Link>
+                                        <Link to="/register">
+                                            <Button size="sm" className="w-full">
+                                                Get Started
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
-            </nav>
+            </motion.nav>
 
             {/* Hero Section */}
-            <section className="relative h-dvh flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
-                <div className="absolute inset-0 bg-[url('/api/placeholder/1200/800')] bg-center bg-no-repeat bg-cover opacity-10"></div>
-                <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-[#6a5acd]/10 to-transparent"></div>
+            <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 hero-pattern opacity-50" />
+                
+                {/* Floating Elements */}
+                <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 animate-float" />
+                <div className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-20 animate-float" style={{ animationDelay: '2s' }} />
+                <div className="absolute bottom-20 left-20 w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full opacity-20 animate-float" style={{ animationDelay: '4s' }} />
 
                 <div className="max-w-7xl mx-auto relative z-10 w-full">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-0">
-                        <div className="text-center lg:text-left order-2 lg:order-1">
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-                                Enterprise <span className="text-[#6a5acd] block sm:inline">Device Management</span> Reimagined
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <motion.div 
+                            className="text-center lg:text-left"
+                            initial={{ opacity: 0, x: -50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 mb-6"
+                            >
+                                <Star className="w-4 h-4 text-yellow-500 mr-2" />
+                                <span className={isDark ? 'text-blue-300' : 'text-blue-700'}>
+                                    Trusted by 500+ organizations
+                                </span>
+                            </motion.div>
+                            
+                            <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
+                                Enterprise{' '}
+                                <span className="text-gradient block sm:inline">
+                                    Device Management
+                                </span>{' '}
+                                Reimagined
                             </h1>
-                            <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto lg:mx-0">
-                                Take complete control of your organization's hardware fleet with our intuitive platform. From activation to analytics, all in one place.
+                            
+                            <p className={`text-lg sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto lg:mx-0 ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                                Take complete control of your organization's hardware fleet with our intuitive platform. 
+                                From activation to analytics, all in one place.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <Link to={"/register"} className="bg-[#6a5acd] hover:bg-[#5a4abd] text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)] flex items-center justify-center">
-                                    Get Started <ChevronRight className="ml-2 h-5 w-5" />
+                            
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+                                <Link to="/register">
+                                    <Button size="xl" icon={<ArrowRight size={20} />}>
+                                        Start Free Trial
+                                    </Button>
                                 </Link>
-                                <button className="border border-[#6a5acd] text-[#6a5acd] hover:bg-[#6a5acd]/10 font-semibold py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.2)]">
+                                <Button 
+                                    variant="outline" 
+                                    size="xl" 
+                                    icon={<Play size={20} />}
+                                    onClick={() => scrollToSection('demo')}
+                                >
                                     Watch Demo
-                                </button>
+                                </Button>
                             </div>
-                        </div>
 
-                        <div className="order-1 lg:order-2">
-                            <div className="relative max-w-lg mx-auto lg:max-w-none">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-[#6a5acd] to-[#4a3a8d] rounded-2xl blur opacity-30"></div>
-                                <div className="relative bg-[rgba(30,30,30,0.8)] backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-gray-800">
-                                    <img
-                                        src="/api/placeholder/600/400"
-                                        alt="Dashboard preview"
-                                        className="rounded-lg shadow-lg w-full h-auto"
-                                    />
+                            {/* Trust Indicators */}
+                            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-500">
+                                <div className="flex items-center">
+                                    <Shield className="w-4 h-4 mr-2 text-green-500" />
+                                    SOC 2 Compliant
+                                </div>
+                                <div className="flex items-center">
+                                    <Lock className="w-4 h-4 mr-2 text-blue-500" />
+                                    256-bit Encryption
+                                </div>
+                                <div className="flex items-center">
+                                    <Globe className="w-4 h-4 mr-2 text-purple-500" />
+                                    Global Infrastructure
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
+
+                        <motion.div 
+                            className="relative"
+                            initial={{ opacity: 0, x: 50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                        >
+                            <div className="relative max-w-lg mx-auto lg:max-w-none">
+                                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20 animate-pulse" />
+                                <Card className="relative p-4 sm:p-6 backdrop-blur-xl">
+                                    <div className="aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
+                                        <div className="text-6xl">🖥️</div>
+                                    </div>
+                                    
+                                    {/* Live Stats Overlay */}
+                                    <div className="absolute top-8 right-8 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                                        <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse" />
+                                        Live
+                                    </div>
+                                    
+                                    {/* Quick Stats */}
+                                    <div className="grid grid-cols-3 gap-4 mt-4">
+                                        {[
+                                            { label: 'Devices', value: '1,247' },
+                                            { label: 'Online', value: '98%' },
+                                            { label: 'Reports', value: '47' }
+                                        ].map((stat, index) => (
+                                            <motion.div
+                                                key={stat.label}
+                                                className={`text-center p-3 rounded-lg ${
+                                                    isDark ? 'bg-gray-800/50' : 'bg-gray-50'
+                                                }`}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.5 + index * 0.1 }}
+                                            >
+                                                <div className={`text-lg font-bold ${
+                                                    isDark ? 'text-white' : 'text-gray-900'
+                                                }`}>
+                                                    {stat.value}
+                                                </div>
+                                                <div className={`text-sm ${
+                                                    isDark ? 'text-gray-400' : 'text-gray-600'
+                                                }`}>
+                                                    {stat.label}
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </Card>
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* Stats Section */}
-            <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-[rgba(30,30,30,0.3)]">
+            <section className={`py-16 sm:py-24 px-4 sm:px-6 lg:px-8 ${
+                isDark ? 'bg-gray-900/50' : 'bg-gray-50/50'
+            }`}>
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 text-center">
-                        {[
-                            { number: '5000+', label: 'Devices Managed' },
-                            { number: '200+', label: 'Enterprise Clients' },
-                            { number: '99.9%', label: 'Uptime' },
-                            { number: '24/7', label: 'Support' }
-                        ].map((stat, index) => (
-                            <div key={index} className="p-4 sm:p-6">
-                                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#6a5acd] mb-2">{stat.number}</p>
-                                <p className="text-sm sm:text-base text-gray-400">{stat.label}</p>
-                            </div>
+                    <motion.div 
+                        className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center"
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, staggerChildren: 0.1 }}
+                    >
+                        {stats.map((stat, index) => (
+                            <motion.div
+                                key={index}
+                                className="space-y-4"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1 }}
+                                whileHover={{ scale: 1.05 }}
+                            >
+                                <div className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center ${
+                                    isDark 
+                                        ? 'bg-gradient-to-br from-blue-600 to-purple-600' 
+                                        : 'bg-gradient-to-br from-blue-500 to-purple-500'
+                                } shadow-lg`}>
+                                    <stat.icon className="w-8 h-8 text-white" />
+                                </div>
+                                <div>
+                                    <div className={`text-3xl sm:text-4xl font-bold ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>
+                                        {stat.number}
+                                    </div>
+                                    <div className={`text-sm sm:text-base ${
+                                        isDark ? 'text-gray-400' : 'text-gray-600'
+                                    }`}>
+                                        {stat.label}
+                                    </div>
+                                </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+            <section id="features" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-12 sm:mb-16">
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">Powerful Features</h2>
-                        <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">
-                            Everything you need to manage your device fleet efficiently and securely
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
+                            Powerful Features for{' '}
+                            <span className="text-gradient">Modern Teams</span>
+                        </h2>
+                        <p className={`text-lg sm:text-xl max-w-3xl mx-auto ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>
+                            Everything you need to manage your device fleet efficiently, securely, and at scale
                         </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                        {[
-                            {
-                                icon: Layers,
-                                title: 'Super Admin Panel',
-                                description: 'Comprehensive control over MAC IDs, activation keys, and admin accounts with full authority and audit trails.'
-                            },
-                            {
-                                icon: Users,
-                                title: 'Admin Onboarding',
-                                description: 'Streamlined sign-up process, easy device registration by MAC/System ID, and secure payment integration.'
-                            },
-                            {
-                                icon: BarChart3,
-                                title: 'Report Access',
-                                description: 'Download comprehensive daily reports in multiple formats directly from your device\'s software.'
-                            },
-                            {
-                                icon: Zap,
-                                title: 'Real-time Monitoring',
-                                description: 'Get instant notifications and status updates on all your devices with our real-time dashboard.'
-                            },
-                            {
-                                icon: Lock,
-                                title: 'Enterprise Security',
-                                description: 'Military-grade encryption and comprehensive role-based access controls to protect your data.'
-                            },
-                            {
-                                icon: null,
-                                title: 'CubiView App',
-                                description: 'Integrate with your existing systems using our well-documented and feature-rich Application.',
-                                isAPI: true
-                            }
-                        ].map((feature, index) => (
-                            <div key={index} className="bg-[rgba(30,30,30,0.5)] backdrop-blur-md border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)] hover:transform hover:scale-105">
-                                <div className="mb-4">
-                                    {feature.isAPI ? (
-                                        <div className="flex justify-center items-center h-16 w-16 bg-[#6a5acd]/20 rounded-lg">
-                                            <div className="text-2xl text-[#6a5acd] font-bold">APP</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {features.map((feature, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1 }}
+                                whileHover={{ y: -5 }}
+                                onHoverStart={() => setActiveFeature(index)}
+                            >
+                                <Card 
+                                    className={`p-8 h-full transition-all duration-300 cursor-pointer ${
+                                        activeFeature === index 
+                                            ? isDark 
+                                                ? 'ring-2 ring-blue-500/50 bg-gray-800/80' 
+                                                : 'ring-2 ring-blue-500/50 bg-white/80'
+                                            : ''
+                                    }`}
+                                >
+                                    <div className="flex flex-col items-center text-center space-y-4">
+                                        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} p-4 shadow-lg`}>
+                                            <feature.icon className="w-full h-full text-white" />
                                         </div>
-                                    ) : (
-                                        <div className="inline-flex items-center justify-center bg-[#6a5acd]/20 p-3 rounded-lg">
-                                            <feature.icon className="h-8 w-8 text-[#6a5acd]" />
-                                        </div>
-                                    )}
-                                </div>
-                                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                                <p className="text-gray-400 text-sm sm:text-base">{feature.description}</p>
-                            </div>
+                                        <h3 className={`text-xl font-bold ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
+                                            {feature.title}
+                                        </h3>
+                                        <p className={`text-sm leading-relaxed ${
+                                            isDark ? 'text-gray-400' : 'text-gray-600'
+                                        }`}>
+                                            {feature.description}
+                                        </p>
+                                    </div>
+                                </Card>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Workflow Section */}
-            <section id="workflow" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-t from-[#111827] to-black">
+            {/* How It Works Section */}
+            <section id="how-it-works" className={`py-16 sm:py-24 px-4 sm:px-6 lg:px-8 ${
+                isDark ? 'bg-gray-900/30' : 'bg-gray-50/50'
+            }`}>
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-12 sm:mb-16">
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">How It Works</h2>
-                        <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
+                            How It Works
+                        </h2>
+                        <p className={`text-lg sm:text-xl max-w-3xl mx-auto ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>
                             Get started in minutes with our simple onboarding process
                         </p>
-                    </div>
+                    </motion.div>
 
                     <div className="relative">
-                        {/* Connecting line - hidden on mobile */}
-                        <div className="hidden lg:block absolute top-8 left-0 right-0 h-1 bg-gradient-to-r from-[#6a5acd] via-[#6a5acd]/30 to-[#6a5acd] transform -translate-y-1/2 z-0"></div>
+                        {/* Connecting line for desktop */}
+                        <div className="hidden lg:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 opacity-30" />
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 relative z-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 relative z-10">
                             {[
-                                { title: 'Sign Up', description: 'Create your account with basic information' },
-                                { title: 'Add Device', description: 'Register devices using MAC ID or System ID' },
-                                { title: 'Payment', description: 'Choose a plan and complete secure payment' },
-                                { title: 'Activate', description: 'Activate your devices with generated keys' },
-                                { title: 'Get Reports', description: 'Access and download detailed reports' }
-                            ].map((step, idx) => (
-                                <div key={idx} className="flex flex-col items-center text-center">
-                                    <div className="relative mb-4">
-                                        <div className="absolute -inset-1 bg-[#6a5acd] rounded-full blur-sm opacity-70"></div>
-                                        <div className="relative w-16 h-16 flex items-center justify-center bg-[rgba(30,30,30,0.8)] backdrop-blur-md text-[#6a5acd] text-xl font-bold rounded-full border-2 border-[#6a5acd]">
-                                            {idx + 1}
+                                { title: 'Sign Up', description: 'Create your account with basic information', icon: '👤' },
+                                { title: 'Add Device', description: 'Register devices using MAC ID or System ID', icon: '📱' },
+                                { title: 'Payment', description: 'Choose a plan and complete secure payment', icon: '💳' },
+                                { title: 'Activate', description: 'Activate your devices with generated keys', icon: '🔑' },
+                                { title: 'Monitor', description: 'Access real-time monitoring and reports', icon: '📊' }
+                            ].map((step, index) => (
+                                <motion.div
+                                    key={index}
+                                    className="flex flex-col items-center text-center"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: index * 0.2 }}
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <div className="relative mb-6">
+                                        <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-30" />
+                                        <div className={`relative w-20 h-20 flex items-center justify-center text-2xl rounded-full border-2 ${
+                                            isDark 
+                                                ? 'bg-gray-900 border-gray-700' 
+                                                : 'bg-white border-gray-200'
+                                        } shadow-lg`}>
+                                            {step.icon}
+                                        </div>
+                                        <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white text-sm font-bold flex items-center justify-center">
+                                            {index + 1}
                                         </div>
                                     </div>
-                                    <h3 className="text-lg sm:text-xl font-semibold mb-2">{step.title}</h3>
-                                    <p className="text-sm sm:text-base text-gray-400 max-w-xs">{step.description}</p>
-                                </div>
+                                    <h3 className={`text-lg font-bold mb-3 ${
+                                        isDark ? 'text-white' : 'text-gray-900'
+                                    }`}>
+                                        {step.title}
+                                    </h3>
+                                    <p className={`text-sm max-w-xs ${
+                                        isDark ? 'text-gray-400' : 'text-gray-600'
+                                    }`}>
+                                        {step.description}
+                                    </p>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
@@ -240,95 +543,272 @@ export default function LandingPage() {
             </section>
 
             {/* Demo Section */}
-            <section id="demo" className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
+            <section id="demo" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                        <div className="order-2 lg:order-1">
-                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6">See It In Action</h2>
-                            <p className="text-base sm:text-lg text-gray-400 mb-8">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                            }`}>
+                                See It In Action
+                            </h2>
+                            <p className={`text-lg sm:text-xl mb-8 ${
+                                isDark ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
                                 Watch our platform demonstration to see how CubiView can transform your device management workflow.
                             </p>
-                            <ul className="space-y-4 mb-8">
+                            
+                            <div className="space-y-4 mb-8">
                                 {[
                                     'Complete admin dashboard tour',
                                     'Device registration process',
                                     'Report generation and analysis',
-                                    'User management'
+                                    'User management features'
                                 ].map((item, index) => (
-                                    <li key={index} className="flex items-start">
-                                        <div className="flex-shrink-0 mt-1">
-                                            <div className="w-5 h-5 rounded-full bg-[#6a5acd] flex items-center justify-center">
-                                                <ChevronRight className="h-3 w-3 text-white" />
-                                            </div>
+                                    <motion.div
+                                        key={index}
+                                        className="flex items-center"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.1 }}
+                                    >
+                                        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center mr-3 flex-shrink-0">
+                                            <ChevronRight className="w-3 h-3 text-white" />
                                         </div>
-                                        <span className="ml-3 text-sm sm:text-base">{item}</span>
-                                    </li>
+                                        <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                                            {item}
+                                        </span>
+                                    </motion.div>
                                 ))}
-                            </ul>
-                            <button className="bg-[#6a5acd] hover:bg-[#5a4abd] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)] flex items-center">
+                            </div>
+                            
+                            <Button 
+                                size="lg" 
+                                icon={<Play size={20} />}
+                                className="mb-4"
+                            >
                                 Request Live Demo
-                            </button>
-                        </div>
+                            </Button>
+                            
+                            <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                                No commitment required • 15-minute session
+                            </p>
+                        </motion.div>
 
-                        <div className="order-1 lg:order-2">
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                        >
                             <div className="relative max-w-lg mx-auto lg:max-w-none">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-[#6a5acd] to-[#4a3a8d] rounded-2xl blur opacity-30"></div>
-                                <div className="relative bg-[rgba(30,30,30,0.8)] backdrop-blur-md p-4 rounded-2xl border border-gray-800">
-                                    <div className="aspect-video rounded-lg overflow-hidden">
-                                        <img
-                                            src="/api/placeholder/800/450"
-                                            alt="Demo video placeholder"
-                                            className="object-cover w-full h-full rounded-lg"
-                                        />
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="bg-[#6a5acd] hover:bg-[#5a4abd] rounded-full p-4 shadow-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)] cursor-pointer">
-                                                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                                                </svg>
+                                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20" />
+                                <Card className="relative p-6 backdrop-blur-xl">
+                                    <div className="aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center relative group cursor-pointer">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
+                                        <motion.div
+                                            className="relative z-10 w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20"
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <Play className="w-8 h-8 text-white ml-1" />
+                                        </motion.div>
+                                        <div className="absolute bottom-4 left-4 right-4">
+                                            <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3">
+                                                <div className="flex items-center justify-between text-white text-sm">
+                                                    <span>Dashboard Overview</span>
+                                                    <span>5:32</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Card>
                             </div>
-                        </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Pricing Section */}
+            <section id="pricing" className={`py-16 sm:py-24 px-4 sm:px-6 lg:px-8 ${
+                isDark ? 'bg-gray-900/50' : 'bg-gray-50/50'
+            }`}>
+                <div className="max-w-7xl mx-auto">
+                    <motion.div 
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
+                            Simple, Transparent Pricing
+                        </h2>
+                        <p className={`text-lg sm:text-xl max-w-3xl mx-auto ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>
+                            Choose the perfect plan for your organization. Start free, scale as you grow.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        {[
+                            {
+                                name: 'Starter',
+                                price: 'Free',
+                                description: 'Perfect for small teams getting started',
+                                features: ['Up to 5 devices', 'Basic monitoring', 'Email support', 'Monthly reports'],
+                                popular: false
+                            },
+                            {
+                                name: 'Professional',
+                                price: '₹99',
+                                period: '/device/month',
+                                description: 'Ideal for growing organizations',
+                                features: ['Unlimited devices', 'Real-time monitoring', 'Priority support', 'Advanced analytics', 'API access'],
+                                popular: true
+                            },
+                            {
+                                name: 'Enterprise',
+                                price: 'Custom',
+                                description: 'For large-scale deployments',
+                                features: ['Custom solutions', 'Dedicated support', 'On-premise deployment', 'SLA guarantee', 'Training included'],
+                                popular: false
+                            }
+                        ].map((plan, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1 }}
+                                whileHover={{ y: -5 }}
+                            >
+                                <Card className={`p-8 h-full relative ${
+                                    plan.popular 
+                                        ? 'ring-2 ring-blue-500/50 scale-105' 
+                                        : ''
+                                }`}>
+                                    {plan.popular && (
+                                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                            <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                                                Most Popular
+                                            </span>
+                                        </div>
+                                    )}
+                                    
+                                    <div className="text-center mb-8">
+                                        <h3 className={`text-xl font-bold mb-2 ${
+                                            isDark ? 'text-white' : 'text-gray-900'
+                                        }`}>
+                                            {plan.name}
+                                        </h3>
+                                        <div className="mb-4">
+                                            <span className={`text-4xl font-bold ${
+                                                isDark ? 'text-white' : 'text-gray-900'
+                                            }`}>
+                                                {plan.price}
+                                            </span>
+                                            {plan.period && (
+                                                <span className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                                                    {plan.period}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+                                            {plan.description}
+                                        </p>
+                                    </div>
+                                    
+                                    <ul className="space-y-4 mb-8">
+                                        {plan.features.map((feature, i) => (
+                                            <li key={i} className="flex items-center">
+                                                <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-3 flex-shrink-0">
+                                                    <ChevronRight className="w-3 h-3 text-white" />
+                                                </div>
+                                                <span className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                                                    {feature}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    
+                                    <Button 
+                                        variant={plan.popular ? 'primary' : 'outline'} 
+                                        className="w-full"
+                                    >
+                                        {plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
+                                    </Button>
+                                </Card>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section className="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-[#111827] via-black to-[#10151b]">
+            <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6">Ready to Transform Your Device Management?</h2>
-                    <p className="text-base sm:text-lg text-gray-400 mb-8 max-w-3xl mx-auto">
-                        Join hundreds of organizations that trust CubiView for their enterprise device management needs.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button className="bg-[#6a5acd] hover:bg-[#5a4abd] text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.3)] w-full sm:w-auto">
-                            Start Free Trial
-                        </button>
-                        <button className="bg-transparent border border-[#6a5acd] text-[#6a5acd] hover:bg-[#6a5acd]/10 font-semibold py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-[0_0_15px_rgba(106,90,205,0.2)] w-full sm:w-auto">
-                            Contact Sales
-                        </button>
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 ${
+                            isDark ? 'text-white' : 'text-gray-900'
+                        }`}>
+                            Ready to Transform Your{' '}
+                            <span className="text-gradient">Device Management?</span>
+                        </h2>
+                        <p className={`text-lg sm:text-xl mb-8 max-w-3xl mx-auto ${
+                            isDark ? 'text-gray-300' : 'text-gray-600'
+                        }`}>
+                            Join hundreds of organizations that trust CubiView for their enterprise device management needs.
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <Link to="/register">
+                                <Button size="xl" icon={<ArrowRight size={20} />}>
+                                    Start Free Trial
+                                </Button>
+                            </Link>
+                            <Button variant="outline" size="xl">
+                                Schedule Demo
+                            </Button>
+                        </div>
+                        <p className={`text-sm mt-4 ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                            No credit card required • 14-day free trial • Cancel anytime
+                        </p>
+                    </motion.div>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="bg-[rgba(30,30,30,0.5)] backdrop-blur-md border-t border-gray-800 text-white pt-12 pb-6 px-4 sm:px-6 lg:px-8">
+            <footer className={`border-t pt-16 pb-8 px-4 sm:px-6 lg:px-8 ${
+                isDark ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-gray-50'
+            }`}>
                 <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-12">
                         {[
                             {
+                                title: 'Product',
+                                links: ['Features', 'Pricing', 'Security', 'API Documentation']
+                            },
+                            {
                                 title: 'Company',
-                                links: ['About', 'Careers', 'Blog', 'Press']
+                                links: ['About Us', 'Careers', 'Blog', 'Press Kit']
                             },
                             {
                                 title: 'Resources',
-                                links: ['Documentation', 'API Reference', 'Tutorials', 'Guides']
-                            },
-                            {
-                                title: 'Support',
-                                links: ['Help Center', 'Contact Us', 'FAQs', 'Community']
+                                links: ['Help Center', 'Tutorials', 'Community', 'Status Page']
                             },
                             {
                                 title: 'Legal',
@@ -336,11 +816,22 @@ export default function LandingPage() {
                             }
                         ].map((section, index) => (
                             <div key={index}>
-                                <h4 className="font-bold text-base sm:text-lg mb-4">{section.title}</h4>
-                                <ul className="space-y-2">
-                                    {section.links.map((link, linkIndex) => (
-                                        <li key={linkIndex}>
-                                            <a href="#" className="text-sm sm:text-base text-gray-400 hover:text-[#6a5acd] transition-colors duration-300">
+                                <h4 className={`font-bold text-lg mb-4 ${
+                                    isDark ? 'text-white' : 'text-gray-900'
+                                }`}>
+                                    {section.title}
+                                </h4>
+                                <ul className="space-y-3">
+                                    {section.links.map((link, i) => (
+                                        <li key={i}>
+                                            <a 
+                                                href="#" 
+                                                className={`transition-colors ${
+                                                    isDark 
+                                                        ? 'text-gray-400 hover:text-blue-400' 
+                                                        : 'text-gray-600 hover:text-blue-600'
+                                                }`}
+                                            >
                                                 {link}
                                             </a>
                                         </li>
@@ -350,10 +841,25 @@ export default function LandingPage() {
                         ))}
                     </div>
 
-                    <div className="pt-8 border-t border-gray-800 mt-12 flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <div className="flex items-center">
-                            <span className="text-xl sm:text-2xl font-bold">
-                                <span className="text-[#6a5acd]">Cubi</span>View
+                    <div className={`pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4 ${
+                        isDark ? 'border-gray-800' : 'border-gray-200'
+                    }`}>
+                        <div className="flex items-center space-x-2">
+                            <img 
+                                src="/cubiview-logo.png" 
+                                alt="CubiView Logo" 
+                                className="w-8 h-8"
+                                onError={(e) => {
+                                    // Fallback to gradient background if logo fails to load
+                                    e.target.style.display = 'none';
+                                    e.target.nextElementSibling.style.display = 'flex';
+                                }}
+                            />
+                            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center" style={{display: 'none'}}>
+                                <span className="text-white font-bold text-sm">C</span>
+                            </div>
+                            <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                <span className="text-gradient">Cubi</span>View
                             </span>
                         </div>
                         <div className="flex space-x-6">
@@ -361,14 +867,23 @@ export default function LandingPage() {
                                 <a
                                     key={platform}
                                     href="#"
-                                    className="text-sm sm:text-base text-gray-400 hover:text-[#6a5acd] transition-colors duration-300"
+                                    className={`transition-colors ${
+                                        isDark 
+                                            ? 'text-gray-400 hover:text-blue-400' 
+                                            : 'text-gray-600 hover:text-blue-600'
+                                    }`}
                                 >
                                     {platform}
                                 </a>
                             ))}
                         </div>
                     </div>
-                    <p className="text-center text-gray-500 text-xs sm:text-sm mt-8">&copy; 2025 CubiView Corp. All rights reserved.</p>
+                    
+                    <div className="text-center mt-8">
+                        <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                            &copy; 2025 CubiView Corp. All rights reserved.
+                        </p>
+                    </div>
                 </div>
             </footer>
         </div>

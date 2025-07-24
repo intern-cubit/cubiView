@@ -25,14 +25,46 @@ import {
     MoreVertical,
     Copy,
     RefreshCw,
-    X
+    X,
+    ArrowLeft,
+    Home
 } from "lucide-react";
+import { CircleLoader, PulseLoader } from 'react-spinners';
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "../contexts/ThemeContext";
+import ThemeToggle from "../components/ThemeToggle";
+import { Button, Card, Badge } from "../components/ui";
+
+// Helper functions for date formatting and time calculations
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
+
+const getRelativeTime = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) return `${diffInDays} days ago`;
+    const diffInMonths = Math.floor(diffInDays / 30);
+    return `${diffInMonths} months ago`;
+};
 
 export default function DeviceDetails() {
     const { systemId } = useParams();
     const navigate = useNavigate();
+    const { isDark } = useTheme();
 
     const [device, setDevice] = useState({
         _id: "",
@@ -127,18 +159,18 @@ export default function DeviceDetails() {
     const getStatusConfig = (status) => {
         return status === 'active'
             ? {
-                color: 'text-green-400',
-                bg: 'bg-green-500/20',
-                border: 'border-green-500/30',
-                icon: <Wifi size={18} className="text-green-400" />,
+                color: isDark ? 'text-green-400' : 'text-green-600',
+                bg: isDark ? 'bg-green-500/20' : 'bg-green-100/50',
+                border: isDark ? 'border-green-500/30' : 'border-green-300/50',
+                icon: <Wifi size={18} className={isDark ? 'text-green-400' : 'text-green-600'} />,
                 label: 'Online',
                 pulse: 'animate-pulse'
             }
             : {
-                color: 'text-yellow-400',
-                bg: 'bg-yellow-500/20',
-                border: 'border-yellow-500/30',
-                icon: <WifiOff size={18} className="text-yellow-400" />,
+                color: isDark ? 'text-yellow-400' : 'text-yellow-600',
+                bg: isDark ? 'bg-yellow-500/20' : 'bg-yellow-100/50',
+                border: isDark ? 'border-yellow-500/30' : 'border-yellow-300/50',
+                icon: <WifiOff size={18} className={isDark ? 'text-yellow-400' : 'text-yellow-600'} />,
                 label: 'Offline',
                 pulse: ''
             };
@@ -148,17 +180,17 @@ export default function DeviceDetails() {
     const getPaymentConfig = (status) => {
         return status === 'paid'
             ? {
-                color: 'text-green-400',
-                bg: 'bg-green-500/20',
-                border: 'border-green-500/30',
-                icon: <CheckCircle size={18} className="text-green-400" />,
+                color: isDark ? 'text-green-400' : 'text-green-600',
+                bg: isDark ? 'bg-green-500/20' : 'bg-green-100/50',
+                border: isDark ? 'border-green-500/30' : 'border-green-300/50',
+                icon: <CheckCircle size={18} className={isDark ? 'text-green-400' : 'text-green-600'} />,
                 label: 'Paid'
             }
             : {
-                color: 'text-red-400',
-                bg: 'bg-red-500/20',
-                border: 'border-red-500/30',
-                icon: <AlertCircle size={18} className="text-red-400" />,
+                color: isDark ? 'text-red-400' : 'text-red-600',
+                bg: isDark ? 'bg-red-500/20' : 'bg-red-100/50',
+                border: isDark ? 'border-red-500/30' : 'border-red-300/50',
+                icon: <AlertCircle size={18} className={isDark ? 'text-red-400' : 'text-red-600'} />,
                 label: 'Unpaid'
             };
     };
@@ -299,30 +331,30 @@ export default function DeviceDetails() {
             
             if (isExpired) {
                 return {
-                    color: 'text-red-400',
-                    bg: 'bg-red-500/20',
-                    border: 'border-red-500/30',
-                    icon: <AlertCircle size={18} className="text-red-400" />,
+                    color: isDark ? 'text-red-400' : 'text-red-600',
+                    bg: isDark ? 'bg-red-500/20' : 'bg-red-100/50',
+                    border: isDark ? 'border-red-500/30' : 'border-red-300/50',
+                    icon: <AlertCircle size={18} className={isDark ? 'text-red-400' : 'text-red-600'} />,
                     label: 'Expired',
                     description: 'Premium subscription has expired'
                 };
             }
             
             return {
-                color: 'text-yellow-400',
-                bg: 'bg-yellow-500/20',
-                border: 'border-yellow-500/30',
-                icon: <Crown size={18} className="text-yellow-400" />,
+                color: isDark ? 'text-yellow-400' : 'text-yellow-600',
+                bg: isDark ? 'bg-yellow-500/20' : 'bg-yellow-100/50',
+                border: isDark ? 'border-yellow-500/30' : 'border-yellow-300/50',
+                icon: <Crown size={18} className={isDark ? 'text-yellow-400' : 'text-yellow-600'} />,
                 label: 'Premium',
                 description: `Expires on ${expiryDate.toLocaleDateString()}`
             };
         }
         
         return {
-            color: 'text-gray-400',
-            bg: 'bg-gray-500/20',
-            border: 'border-gray-500/30',
-            icon: <Shield size={18} className="text-gray-400" />,
+            color: isDark ? 'text-gray-400' : 'text-gray-600',
+            bg: isDark ? 'bg-gray-500/20' : 'bg-gray-200/50',
+            border: isDark ? 'border-gray-500/30' : 'border-gray-300/50',
+            icon: <Shield size={18} className={isDark ? 'text-gray-400' : 'text-gray-600'} />,
             label: 'Basic',
             description: 'Upgrade to premium for report downloads'
         };
@@ -366,48 +398,88 @@ export default function DeviceDetails() {
 
     if (isDeleted) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#111827] via-black to-[#10151b] flex items-center justify-center p-4">
+            <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${
+                isDark 
+                    ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' 
+                    : 'bg-gradient-to-br from-gray-50 via-white to-blue-50'
+            }`}>
+                {/* Background Pattern */}
+                <div className="absolute inset-0 hero-pattern opacity-30" />
+                
+                {/* Floating Elements */}
+                <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-10 animate-float" />
+                <div className="absolute bottom-20 right-20 w-32 h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-10 animate-float" style={{ animationDelay: '2s' }} />
+
                 <motion.div
-                    className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-md border border-green-500/50 rounded-2xl p-8 text-center max-w-md"
+                    className={`backdrop-blur-md border rounded-2xl p-8 text-center max-w-md relative z-10 ${
+                        isDark 
+                            ? 'bg-gray-900/50 border-gray-700/50' 
+                            : 'bg-white/50 border-gray-200/50'
+                    }`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                 >
                     <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
                         <CheckCircle size={32} className="text-white" />
                     </div>
-                    <h2 className="text-2xl font-bold text-green-400 mb-3">Device Deleted Successfully</h2>
-                    <p className="text-gray-300 mb-6">The device has been removed from the system.</p>
-                    <button
+                    <h2 className="text-2xl font-bold text-green-500 mb-3">Device Deleted Successfully</h2>
+                    <p className={`mb-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                        The device has been removed from the system.
+                    </p>
+                    <Button
                         onClick={handleBackToDashboard}
-                        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20"
+                        className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
                     >
                         Return to Dashboard
-                    </button>
+                    </Button>
                 </motion.div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#111827] via-black to-[#10151b] text-white">
-            <div className="container mx-auto px-4 py-6 lg:px-8 lg:py-8 max-w-7xl">
-                {/* Back Button */}
+        <div className={`min-h-screen transition-colors duration-300 ${
+            isDark 
+                ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' 
+                : 'bg-gradient-to-br from-gray-50 via-white to-blue-50'
+        }`}>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 hero-pattern opacity-30" />
+            
+            {/* Floating Elements */}
+            <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-10 animate-float" />
+            <div className="absolute bottom-20 right-20 w-32 h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full opacity-10 animate-float" style={{ animationDelay: '2s' }} />
+
+            {/* Fixed Header with Navigation and Theme Toggle */}
+            <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-50">
                 <motion.button
                     onClick={handleBackToDashboard}
-                    className="flex items-center text-purple-400 hover:text-purple-300 mb-6 transition-colors group"
+                    className={`inline-flex items-center px-3 py-2 rounded-lg transition-colors ${
+                        isDark 
+                            ? 'text-gray-400 hover:text-white hover:bg-gray-800' 
+                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     whileHover={{ x: -5 }}
                 >
-                    <ChevronLeft size={20} className="mr-1 group-hover:transform group-hover:-translate-x-1 transition-transform" />
-                    <span className="font-medium">Back to Dashboard</span>
+                    <ArrowLeft size={16} className="mr-2" />
+                    <span className="text-sm font-medium">Back to Dashboard</span>
                 </motion.button>
+                <ThemeToggle />
+            </div>
+
+            <div className="container mx-auto px-4 py-6 lg:px-8 lg:py-8 max-w-7xl relative z-10 mt-16 lg:mt-0">
 
                 {/* Upgrade Banner for Non-Premium Users */}
                 <AnimatePresence>
                     {!device.isPremium && showUpgradeBanner && (
                         <motion.div
-                            className="bg-gradient-to-r from-yellow-500/10 via-orange-500/10 to-red-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6"
+                            className={`border rounded-xl p-4 mb-6 ${
+                                isDark 
+                                    ? 'bg-gradient-to-r from-yellow-500/10 via-orange-500/10 to-red-500/10 border-yellow-500/30' 
+                                    : 'bg-gradient-to-r from-yellow-100/50 via-orange-100/50 to-red-100/50 border-yellow-300/50'
+                            }`}
                             initial={{ opacity: 0, y: -20, height: 0 }}
                             animate={{ opacity: 1, y: 0, height: "auto" }}
                             exit={{ opacity: 0, y: -20, height: 0 }}
@@ -415,44 +487,62 @@ export default function DeviceDetails() {
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-4 flex-1">
-                                    <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <Crown size={20} className="text-yellow-400" />
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                        isDark ? 'bg-yellow-500/20' : 'bg-yellow-200/50'
+                                    }`}>
+                                        <Crown size={20} className={isDark ? 'text-yellow-400' : 'text-yellow-600'} />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="text-lg font-semibold text-yellow-400 mb-1">
+                                        <h3 className={`text-lg font-semibold mb-1 ${
+                                            isDark ? 'text-yellow-400' : 'text-yellow-700'
+                                        }`}>
                                             You're missing out on premium features!
                                         </h3>
-                                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-300">
+                                        <div className={`flex flex-wrap items-center gap-x-6 gap-y-2 text-sm ${
+                                            isDark ? 'text-gray-300' : 'text-gray-600'
+                                        }`}>
                                             <div className="flex items-center space-x-2">
-                                                <Download size={14} className="text-yellow-400 flex-shrink-0" />
+                                                <Download size={14} className={`flex-shrink-0 ${
+                                                    isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                                }`} />
                                                 <span>Download reports</span>
                                             </div>
                                             <div className="flex items-center space-x-2">
-                                                <FileText size={14} className="text-yellow-400 flex-shrink-0" />
+                                                <FileText size={14} className={`flex-shrink-0 ${
+                                                    isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                                }`} />
                                                 <span>Historical data</span>
                                             </div>
                                             <div className="flex items-center space-x-2">
-                                                <Settings size={14} className="text-yellow-400 flex-shrink-0" />
+                                                <Settings size={14} className={`flex-shrink-0 ${
+                                                    isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                                }`} />
                                                 <span>Advanced analytics</span>
                                             </div>
                                             <div className="flex items-center space-x-2">
-                                                <Shield size={14} className="text-yellow-400 flex-shrink-0" />
+                                                <Shield size={14} className={`flex-shrink-0 ${
+                                                    isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                                }`} />
                                                 <span>Priority support</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3 ml-4">
-                                    <button
+                                    <Button
                                         onClick={() => setIsPremiumModalOpen(true)}
-                                        className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center text-sm font-medium hover:shadow-lg hover:shadow-yellow-500/20 flex-shrink-0"
+                                        className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white flex items-center text-sm font-medium flex-shrink-0"
+                                        icon={<Crown size={14} />}
                                     >
-                                        <Crown size={14} className="mr-1" />
                                         Upgrade Now
-                                    </button>
+                                    </Button>
                                     <button
                                         onClick={() => setShowUpgradeBanner(false)}
-                                        className="text-gray-400 hover:text-white transition-colors p-1 flex-shrink-0"
+                                        className={`transition-colors p-1 flex-shrink-0 ${
+                                            isDark 
+                                                ? 'text-gray-400 hover:text-white' 
+                                                : 'text-gray-500 hover:text-gray-700'
+                                        }`}
                                         title="Dismiss"
                                     >
                                         <X size={20} />
@@ -464,13 +554,16 @@ export default function DeviceDetails() {
                 </AnimatePresence>
 
                 {/* Main Content */}
-                <motion.div
-                    className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-md border border-gray-700/50 rounded-2xl overflow-hidden shadow-2xl"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                <Card
+                    className="overflow-hidden shadow-2xl"
+                    hover={false}
                 >
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-gray-800/60 to-gray-900/60 p-6 lg:p-8 border-b border-gray-700/50">
+                    <div className={`p-6 lg:p-8 border-b ${
+                        isDark 
+                            ? 'bg-gray-800/30 border-gray-700/50' 
+                            : 'bg-gray-50/50 border-gray-200/50'
+                    }`}>
                         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
                             <div className="flex items-center space-x-4">
                                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center">
@@ -480,7 +573,9 @@ export default function DeviceDetails() {
                                     <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                                         Device Details
                                     </h1>
-                                    <p className="text-gray-300 mt-1">MAC ID: {device.systemId}</p>
+                                    <p className={`mt-1 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                        MAC ID: {device.systemId}
+                                    </p>
                                 </div>
                             </div>
 
@@ -512,55 +607,89 @@ export default function DeviceDetails() {
                         {loading ? (
                             <div className="text-center py-16">
                                 <motion.div
-                                    className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                />
-                                <p className="text-lg text-gray-300">Loading device details...</p>
+                                    className="mb-6"
+                                >
+                                    <CircleLoader 
+                                        color={isDark ? '#8b5cf6' : '#7c3aed'} 
+                                        size={64}
+                                        loading={true}
+                                    />
+                                </motion.div>
+                                <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                                    Loading device details...
+                                </p>
                             </div>
                         ) : error ? (
                             <div className="text-center py-16">
-                                <AlertTriangle size={48} className="text-red-400 mx-auto mb-4" />
-                                <h3 className="text-xl text-red-400 mb-2">Error Loading Device</h3>
-                                <p className="text-gray-300 mb-6">{error}</p>
-                                <button
-                                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300"
+                                <AlertTriangle size={48} className={`mx-auto mb-4 ${
+                                    isDark ? 'text-red-400' : 'text-red-500'
+                                }`} />
+                                <h3 className={`text-xl mb-2 ${
+                                    isDark ? 'text-red-400' : 'text-red-600'
+                                }`}>Error Loading Device</h3>
+                                <p className={`mb-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{error}</p>
+                                <Button
                                     onClick={() => window.location.reload()}
+                                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                                    icon={<RefreshCw size={18} />}
                                 >
-                                    <RefreshCw size={18} className="mr-2 inline" />
                                     Retry
-                                </button>
+                                </Button>
                             </div>
                         ) : (
                             <div className="space-y-8">
                                 {/* Download Report Section - Only for Premium Devices */}
                                 {device.isPremium && (
                                     <motion.div
-                                        className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6"
+                                        className={`rounded-xl p-6 ${
+                                            isDark 
+                                                ? 'bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/20' 
+                                                : 'bg-gradient-to-br from-blue-50/50 to-purple-50/50 border border-blue-200/50'
+                                        }`}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.1 }}
                                     >
                                         <div className="flex items-center mb-4">
-                                            <FileText size={24} className="text-blue-400 mr-3" />
-                                            <h2 className="text-xl font-semibold text-blue-400">Download Report</h2>
+                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${
+                                                isDark 
+                                                    ? 'bg-blue-500/20 text-blue-400' 
+                                                    : 'bg-blue-100 text-blue-600'
+                                            }`}>
+                                                <FileText size={20} />
+                                            </div>
+                                            <h2 className={`text-xl font-semibold ${
+                                                isDark ? 'text-blue-400' : 'text-blue-700'
+                                            }`}>Download Report</h2>
                                         </div>
 
                                         {downloadError && (
                                             <motion.div
-                                                className="mb-4 p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400"
+                                                className={`mb-4 p-4 rounded-lg flex items-center ${
+                                                    isDark 
+                                                        ? 'bg-red-500/20 border border-red-500/30 text-red-400' 
+                                                        : 'bg-red-50 border border-red-200 text-red-600'
+                                                }`}
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                             >
-                                                <AlertTriangle size={16} className="inline mr-2" />
+                                                <AlertTriangle size={16} className="mr-2 flex-shrink-0" />
                                                 {downloadError}
                                             </motion.div>
                                         )}
 
-                                        <div className="bg-gray-700/30 rounded-lg p-4 border border-gray-600/30">
+                                        <div className={`rounded-lg p-4 border ${
+                                            isDark 
+                                                ? 'bg-gray-800/30 border-gray-600/30' 
+                                                : 'bg-gray-50/50 border-gray-200/50'
+                                        }`}>
                                             <div className="flex flex-col lg:flex-row items-stretch gap-4">
                                                 <div className="flex-1">
-                                                    <label htmlFor="reportDate" className="block text-sm font-medium text-gray-300 mb-2">
+                                                    <label htmlFor="reportDate" className={`block text-sm font-medium mb-2 ${
+                                                        isDark ? 'text-gray-300' : 'text-gray-700'
+                                                    }`}>
                                                         Select Date for Report
                                                     </label>
                                                     <div className="relative">
@@ -569,30 +698,28 @@ export default function DeviceDetails() {
                                                             id="reportDate"
                                                             value={selectedDate}
                                                             onChange={handleDateChange}
-                                                            className="w-full bg-gray-700/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/25 transition-all"
+                                                            className={`w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 transition-all ${
+                                                                isDark 
+                                                                    ? 'bg-gray-700/50 border-gray-600/50 text-white focus:border-blue-500/50 focus:ring-blue-500/25' 
+                                                                    : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500/25'
+                                                            }`}
                                                         />
-                                                        <Calendar size={18} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-400 pointer-events-none" />
+                                                        <Calendar size={18} className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${
+                                                            isDark ? 'text-blue-400' : 'text-blue-600'
+                                                        }`} />
                                                     </div>
                                                 </div>
 
                                                 <div className="flex items-end">
-                                                    <button
+                                                    <Button
                                                         onClick={handleReportDownload}
                                                         disabled={isDownloading || !selectedDate}
-                                                        className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-all duration-300 flex items-center hover:shadow-lg hover:shadow-blue-500/20"
+                                                        className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                                                        isLoading={isDownloading}
+                                                        icon={!isDownloading ? <Download size={18} /> : null}
                                                     >
-                                                        {isDownloading ? (
-                                                            <>
-                                                                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2"></div>
-                                                                <span>Downloading...</span>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <Download size={18} className="mr-2" />
-                                                                <span>Download</span>
-                                                            </>
-                                                        )}
-                                                    </button>
+                                                        {isDownloading ? 'Downloading...' : 'Download'}
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -601,282 +728,337 @@ export default function DeviceDetails() {
 
                                 {/* Device Information Grid */}
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    {/* Left Column */}
-                                    <div className="space-y-6">
-                                        {/* Basic Information */}
-                                        <motion.div
-                                            className="bg-gradient-to-br from-gray-700/30 to-gray-800/30 border border-gray-600/30 rounded-xl p-6"
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.2 }}
-                                        >
+                                    {/* Left Column - Basic Information */}
+                                    <motion.div
+                                        className="space-y-6"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.2 }}
+                                    >
+                                        <Card className="p-6">
                                             <div className="flex items-center mb-6">
-                                                <Database size={24} className="text-purple-400 mr-3" />
-                                                <h3 className="text-xl font-semibold text-purple-400">Basic Information</h3>
+                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${
+                                                    isDark 
+                                                        ? 'bg-purple-500/20 text-purple-400' 
+                                                        : 'bg-purple-100 text-purple-600'
+                                                }`}>
+                                                    <Database size={20} />
+                                                </div>
+                                                <h3 className={`text-xl font-semibold ${
+                                                    isDark ? 'text-purple-400' : 'text-purple-700'
+                                                }`}>Basic Information</h3>
                                             </div>
 
                                             <div className="space-y-4">
-                                                {/* MAC ID */}
-                                                <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
+                                                {/* System ID */}
+                                                <div className={`rounded-lg p-4 border transition-all hover:shadow-md ${
+                                                    isDark 
+                                                        ? 'bg-gray-800/30 border-gray-600/30 hover:border-purple-500/30' 
+                                                        : 'bg-gray-50/50 border-gray-200/50 hover:border-purple-300/50'
+                                                }`}>
                                                     <div className="flex items-center justify-between mb-2">
                                                         <div className="flex items-center">
-                                                            <Wifi size={18} className="text-purple-400 mr-2" />
-                                                            <span className="text-sm font-medium text-gray-400">System ID</span>
+                                                            <Wifi size={18} className={`mr-2 ${
+                                                                isDark ? 'text-purple-400' : 'text-purple-600'
+                                                            }`} />
+                                                            <span className={`text-sm font-medium ${
+                                                                isDark ? 'text-gray-400' : 'text-gray-600'
+                                                            }`}>System ID</span>
                                                         </div>
                                                         <button
                                                             onClick={() => copyToClipboard(device.systemId, "System ID")}
-                                                            className="text-gray-400 hover:text-purple-400 transition-colors"
+                                                            className={`transition-colors hover:scale-110 ${
+                                                                isDark 
+                                                                    ? 'text-gray-400 hover:text-purple-400' 
+                                                                    : 'text-gray-500 hover:text-purple-600'
+                                                            }`}
                                                         >
                                                             <Copy size={16} />
                                                         </button>
                                                     </div>
-                                                    <p className="text-white font-mono text-sm break-all">{device.systemId}</p>
+                                                    <p className={`font-mono text-sm break-all font-semibold ${
+                                                        isDark ? 'text-white' : 'text-gray-900'
+                                                    }`}>{device.systemId}</p>
                                                 </div>
 
                                                 {/* Activation Key */}
-                                                <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
+                                                <div className={`rounded-lg p-4 border transition-all hover:shadow-md ${
+                                                    isDark 
+                                                        ? 'bg-gray-800/30 border-gray-600/30 hover:border-purple-500/30' 
+                                                        : 'bg-gray-50/50 border-gray-200/50 hover:border-purple-300/50'
+                                                }`}>
                                                     <div className="flex items-center justify-between mb-2">
                                                         <div className="flex items-center">
-                                                            <Key size={18} className="text-purple-400 mr-2" />
-                                                            <span className="text-sm font-medium text-gray-400">Activation Key</span>
+                                                            <Key size={18} className={`mr-2 ${
+                                                                isDark ? 'text-purple-400' : 'text-purple-600'
+                                                            }`} />
+                                                            <span className={`text-sm font-medium ${
+                                                                isDark ? 'text-gray-400' : 'text-gray-600'
+                                                            }`}>Activation Key</span>
                                                         </div>
                                                         <button
                                                             onClick={() => copyToClipboard(device.activationKey, "Activation Key")}
-                                                            className="text-gray-400 hover:text-purple-400 transition-colors"
+                                                            className={`transition-colors hover:scale-110 ${
+                                                                isDark 
+                                                                    ? 'text-gray-400 hover:text-purple-400' 
+                                                                    : 'text-gray-500 hover:text-purple-600'
+                                                            }`}
                                                         >
                                                             <Copy size={16} />
                                                         </button>
                                                     </div>
-                                                    <p className="text-white font-mono text-sm break-all">{device.activationKey}</p>
+                                                    <p className={`font-mono text-sm break-all font-semibold ${
+                                                        isDark ? 'text-white' : 'text-gray-900'
+                                                    }`}>{device.activationKey}</p>
                                                 </div>
                                             </div>
-                                        </motion.div>
+                                        </Card>
 
-                                        {/* Status Information */}
-                                        <motion.div
-                                            className="bg-gradient-to-br from-gray-700/30 to-gray-800/30 border border-gray-600/30 rounded-xl p-6"
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.3 }}
-                                        >
+                                        {/* Status Overview */}
+                                        <Card className="p-6">
                                             <div className="flex items-center mb-6">
-                                                <Activity size={24} className="text-green-400 mr-3" />
-                                                <h3 className="text-xl font-semibold text-green-400">Status Overview</h3>
+                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${
+                                                    isDark 
+                                                        ? 'bg-green-500/20 text-green-400' 
+                                                        : 'bg-green-100 text-green-600'
+                                                }`}>
+                                                    <Activity size={20} />
+                                                </div>
+                                                <h3 className={`text-xl font-semibold ${
+                                                    isDark ? 'text-green-400' : 'text-green-700'
+                                                }`}>Status Overview</h3>
                                             </div>
 
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className={`${statusConfig.bg} ${statusConfig.border} border rounded-lg p-4`}>
-                                                    <div className="flex items-center mb-2">
-                                                        {statusConfig.icon}
-                                                        <span className="ml-2 text-sm font-medium text-gray-400">Device Status</span>
+                                            <div className="space-y-4">
+                                                {/* Device Status */}
+                                                <div className={`rounded-lg p-4 border ${
+                                                    statusConfig.bg
+                                                } ${statusConfig.border}`}>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center">
+                                                            {statusConfig.icon}
+                                                            <span className={`ml-2 font-medium ${statusConfig.color}`}>
+                                                                Device Status
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center">
+                                                            <div className={`w-2 h-2 rounded-full mr-2 ${
+                                                                statusConfig.color.replace('text-', 'bg-')
+                                                            } ${statusConfig.pulse}`}></div>
+                                                            <span className={`text-sm font-semibold ${statusConfig.color}`}>
+                                                                {statusConfig.label}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <p className={`text-lg font-semibold ${statusConfig.color} capitalize`}>
-                                                        {device.deviceStatus}
-                                                    </p>
                                                 </div>
 
-                                                <div className={`${paymentConfig.bg} ${paymentConfig.border} border rounded-lg p-4`}>
-                                                    <div className="flex items-center mb-2">
-                                                        {paymentConfig.icon}
-                                                        <span className="ml-2 text-sm font-medium text-gray-400">Payment Status</span>
+                                                {/* Payment Status */}
+                                                <div className={`rounded-lg p-4 border ${
+                                                    paymentConfig.bg
+                                                } ${paymentConfig.border}`}>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center">
+                                                            {paymentConfig.icon}
+                                                            <span className={`ml-2 font-medium ${paymentConfig.color}`}>
+                                                                Payment Status
+                                                            </span>
+                                                        </div>
+                                                        <span className={`text-sm font-semibold ${paymentConfig.color}`}>
+                                                            {paymentConfig.label}
+                                                        </span>
                                                     </div>
-                                                    <p className={`text-lg font-semibold ${paymentConfig.color} capitalize`}>
-                                                        {device.paymentStatus}
-                                                    </p>
+                                                </div>
+
+                                                {/* Premium Status */}
+                                                <div className={`rounded-lg p-4 border ${
+                                                    premiumConfig.bg
+                                                } ${premiumConfig.border}`}>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex items-center">
+                                                            {premiumConfig.icon}
+                                                            <span className={`ml-2 font-medium ${premiumConfig.color}`}>
+                                                                Premium Status
+                                                            </span>
+                                                        </div>
+                                                        <span className={`text-sm font-semibold ${premiumConfig.color}`}>
+                                                            {premiumConfig.label}
+                                                        </span>
+                                                    </div>
+                                                    {premiumConfig.description && (
+                                                        <p className={`text-xs mt-2 ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-600'
+                                                        }`}>
+                                                            {premiumConfig.description}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
-                                        </motion.div>
-                                    </div>
+                                        </Card>
+                                    </motion.div>
 
-                                    {/* Right Column */}
-                                    <div className="space-y-6">
-                                        {/* Administrative */}
-                                        <motion.div
-                                            className="bg-gradient-to-br from-gray-700/30 to-gray-800/30 border border-gray-600/30 rounded-xl p-6"
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.4 }}
-                                        >
+                                    {/* Right Column - Admin & Timeline */}
+                                    <motion.div
+                                        className="space-y-6"
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.3 }}
+                                    >
+                                        {/* Admin Information */}
+                                        <Card className="p-6">
                                             <div className="flex items-center mb-6">
-                                                <User size={24} className="text-yellow-400 mr-3" />
-                                                <h3 className="text-xl font-semibold text-yellow-400">Administrative</h3>
+                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${
+                                                    isDark 
+                                                        ? 'bg-yellow-500/20 text-yellow-400' 
+                                                        : 'bg-yellow-100 text-yellow-600'
+                                                }`}>
+                                                    <User size={20} />
+                                                </div>
+                                                <h3 className={`text-xl font-semibold ${
+                                                    isDark ? 'text-yellow-400' : 'text-yellow-700'
+                                                }`}>Admin Profile</h3>
                                             </div>
 
-                                            <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
+                                            <div className={`rounded-lg p-4 border transition-all hover:shadow-md ${
+                                                isDark 
+                                                    ? 'bg-gray-800/30 border-gray-600/30 hover:border-yellow-500/30' 
+                                                    : 'bg-gray-50/50 border-gray-200/50 hover:border-yellow-300/50'
+                                            }`}>
                                                 <div className="flex items-center justify-between mb-2">
                                                     <div className="flex items-center">
-                                                        <Shield size={18} className="text-yellow-400 mr-2" />
-                                                        <span className="text-sm font-medium text-gray-400">Admin ID</span>
+                                                        <Hash size={18} className={`mr-2 ${
+                                                            isDark ? 'text-yellow-400' : 'text-yellow-600'
+                                                        }`} />
+                                                        <span className={`text-sm font-medium ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-600'
+                                                        }`}>Admin ID</span>
                                                     </div>
                                                     <button
                                                         onClick={() => copyToClipboard(device.adminId, "Admin ID")}
-                                                        className="text-gray-400 hover:text-yellow-400 transition-colors"
+                                                        className={`transition-colors hover:scale-110 ${
+                                                            isDark 
+                                                                ? 'text-gray-400 hover:text-yellow-400' 
+                                                                : 'text-gray-500 hover:text-yellow-600'
+                                                        }`}
                                                     >
                                                         <Copy size={16} />
                                                     </button>
                                                 </div>
-                                                <p className="text-white font-mono text-sm break-all">{device.adminId}</p>
+                                                <p className={`font-mono text-sm break-all font-semibold ${
+                                                    isDark ? 'text-white' : 'text-gray-900'
+                                                }`}>{device.adminId}</p>
                                             </div>
-                                        </motion.div>
+                                        </Card>
 
-                                        {/* Timestamps */}
-                                        <motion.div
-                                            className="bg-gradient-to-br from-gray-700/30 to-gray-800/30 border border-gray-600/30 rounded-xl p-6"
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.5 }}
-                                        >
+                                        {/* Timeline */}
+                                        <Card className="p-6">
                                             <div className="flex items-center mb-6">
-                                                <Clock size={24} className="text-blue-400 mr-3" />
-                                                <h3 className="text-xl font-semibold text-blue-400">Timeline</h3>
+                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${
+                                                    isDark 
+                                                        ? 'bg-blue-500/20 text-blue-400' 
+                                                        : 'bg-blue-100 text-blue-600'
+                                                }`}>
+                                                    <Clock size={20} />
+                                                </div>
+                                                <h3 className={`text-xl font-semibold ${
+                                                    isDark ? 'text-blue-400' : 'text-blue-700'
+                                                }`}>Timeline</h3>
                                             </div>
 
                                             <div className="space-y-4">
-                                                <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
+                                                {/* Created */}
+                                                <div className={`rounded-lg p-4 border ${
+                                                    isDark 
+                                                        ? 'bg-gray-800/30 border-gray-600/30' 
+                                                        : 'bg-gray-50/50 border-gray-200/50'
+                                                }`}>
                                                     <div className="flex items-center mb-2">
-                                                        <Calendar size={18} className="text-blue-400 mr-2" />
-                                                        <span className="text-sm font-medium text-gray-400">Created</span>
+                                                        <Calendar size={16} className={`mr-2 ${
+                                                            isDark ? 'text-blue-400' : 'text-blue-600'
+                                                        }`} />
+                                                        <span className={`text-sm font-medium ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-600'
+                                                        }`}>Created</span>
                                                     </div>
-                                                    <p className="text-white text-sm">{formatDate(device.createdAt)}</p>
-                                                    <p className="text-gray-400 text-xs mt-1">{getRelativeTime(device.createdAt)}</p>
+                                                    <p className={`text-sm font-semibold ${
+                                                        isDark ? 'text-white' : 'text-gray-900'
+                                                    }`}>{formatDate(device.createdAt)}</p>
+                                                    <p className={`text-xs ${
+                                                        isDark ? 'text-gray-500' : 'text-gray-500'
+                                                    }`}>{getRelativeTime(device.createdAt)}</p>
                                                 </div>
 
-                                                <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
+                                                {/* Last Updated */}
+                                                <div className={`rounded-lg p-4 border ${
+                                                    isDark 
+                                                        ? 'bg-gray-800/30 border-gray-600/30' 
+                                                        : 'bg-gray-50/50 border-gray-200/50'
+                                                }`}>
                                                     <div className="flex items-center mb-2">
-                                                        <RefreshCw size={18} className="text-blue-400 mr-2" />
-                                                        <span className="text-sm font-medium text-gray-400">Last Updated</span>
+                                                        <RefreshCw size={16} className={`mr-2 ${
+                                                            isDark ? 'text-blue-400' : 'text-blue-600'
+                                                        }`} />
+                                                        <span className={`text-sm font-medium ${
+                                                            isDark ? 'text-gray-400' : 'text-gray-600'
+                                                        }`}>Last Updated</span>
                                                     </div>
-                                                    <p className="text-white text-sm">{formatDate(device.updatedAt)}</p>
-                                                    <p className="text-gray-400 text-xs mt-1">{getRelativeTime(device.updatedAt)}</p>
+                                                    <p className={`text-sm font-semibold ${
+                                                        isDark ? 'text-white' : 'text-gray-900'
+                                                    }`}>{formatDate(device.updatedAt)}</p>
+                                                    <p className={`text-xs ${
+                                                        isDark ? 'text-gray-500' : 'text-gray-500'
+                                                    }`}>{getRelativeTime(device.updatedAt)}</p>
                                                 </div>
                                             </div>
-                                        </motion.div>
-
-                                        {/* Premium Information */}
-                                        <motion.div
-                                            className="bg-gradient-to-br from-gray-700/30 to-gray-800/30 border border-gray-600/30 rounded-xl p-6"
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.35 }}
-                                        >
-                                            <div className="flex items-center mb-6">
-                                                <Crown size={24} className="text-yellow-400 mr-3" />
-                                                <h3 className="text-xl font-semibold text-yellow-400">Premium Status</h3>
-                                            </div>
-
-                                            <div className="space-y-4">
-                                                <div className={`${premiumConfig.bg} ${premiumConfig.border} border rounded-lg p-4`}>
-                                                    <div className="flex items-center mb-2">
-                                                        {premiumConfig.icon}
-                                                        <span className="ml-2 text-sm font-medium text-gray-400">Subscription</span>
-                                                    </div>
-                                                    <p className={`text-lg font-semibold ${premiumConfig.color} mb-1`}>
-                                                        {premiumConfig.label}
-                                                    </p>
-                                                    <p className="text-gray-400 text-sm">
-                                                        {premiumConfig.description}
-                                                    </p>
-                                                </div>
-
-                                                {device.isPremium && device.premiumPlan && (
-                                                    <div className="bg-gray-700/40 rounded-lg p-4 border border-gray-600/40">
-                                                        <div className="flex items-center mb-2">
-                                                            <Settings size={18} className="text-yellow-400 mr-2" />
-                                                            <span className="text-sm font-medium text-gray-400">Current Plan</span>
-                                                        </div>
-                                                        <p className="text-white text-sm capitalize">{device.premiumPlan.replace('days', ' Days').replace('year', ' Year')}</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </motion.div>
-                                    </div>
+                                        </Card>
+                                    </motion.div>
                                 </div>
 
-                                {/* Premium Features Info */}
-                                {!device.isPremium && (
-                                    <motion.div
-                                        className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-6"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.6 }}
+                                {/* Action Buttons */}
+                                <motion.div
+                                    className={`flex flex-col sm:flex-row gap-4 pt-8 border-t ${
+                                        isDark ? 'border-gray-700/50' : 'border-gray-200/50'
+                                    }`}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                >
+                                    <Button
+                                        variant="outline"
+                                        className="flex-1"
+                                        onClick={() => setIsPremiumModalOpen(true)}
+                                        icon={<Crown size={18} />}
                                     >
-                                        <div className="flex items-center mb-4">
-                                            <Crown size={24} className="text-yellow-400 mr-3" />
-                                            <h2 className="text-xl font-semibold text-yellow-400">Unlock Premium Features</h2>
-                                        </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div className="flex items-center space-x-3">
-                                                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                                    <Download size={16} className="text-yellow-400" />
-                                                </div>
-                                                <span className="text-white">Download detailed reports</span>
-                                            </div>
-                                            <div className="flex items-center space-x-3">
-                                                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                                    <FileText size={16} className="text-yellow-400" />
-                                                </div>
-                                                <span className="text-white">Access historical data</span>
-                                            </div>
-                                            <div className="flex items-center space-x-3">
-                                                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                                    <Settings size={16} className="text-yellow-400" />
-                                                </div>
-                                                <span className="text-white">Advanced analytics</span>
-                                            </div>
-                                            <div className="flex items-center space-x-3">
-                                                <div className="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                                    <Shield size={16} className="text-yellow-400" />
-                                                </div>
-                                                <span className="text-white">Priority support</span>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                )}
+                                        {device.isPremium ? 'Extend Premium' : 'Upgrade to Premium'}
+                                    </Button>
+                                    <Button
+                                        variant="danger"
+                                        onClick={() => setIsDeleteModalOpen(true)}
+                                        icon={<Trash2 size={18} />}
+                                    >
+                                        Delete Device
+                                    </Button>
+                                </motion.div>
                             </div>
                         )}
                     </div>
+                    </Card>
 
-                    {/* Action Buttons */}
-                    <div className="border-t border-gray-700/50 p-6 lg:p-8">
-                        <div className="flex flex-col sm:flex-row justify-end gap-3">
-                            <button className="bg-gray-700/50 hover:bg-gray-600/50 border border-gray-600/50 hover:border-gray-500/50 text-white px-6 py-3 rounded-lg transition-all duration-300 flex items-center justify-center hover:shadow-lg">
-                                <Edit3 size={18} className="mr-2" />
-                                Edit Device
-                            </button>
-                            <button 
-                                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-lg transition-all duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-green-500/20"
-                                onClick={() => setIsPremiumModalOpen(true)}
+                    {/* Copy Success Notification */}
+                    <AnimatePresence>
+                        {copySuccess && (
+                            <motion.div
+                                className="fixed top-4 right-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+                                initial={{ opacity: 0, x: 100 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 100 }}
                             >
-                                <Crown size={18} className="mr-2" />
-                                {device.isPremium ? 'Extend Premium' : 'Upgrade to Premium'}
-                            </button>
-                            <button
-                                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-lg transition-all duration-300 flex items-center justify-center hover:shadow-lg hover:shadow-red-500/20"
-                                onClick={() => setIsDeleteModalOpen(true)}
-                            >
-                                <Trash2 size={18} className="mr-2" />
-                                Delete Device
-                            </button>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Copy Success Notification */}
-                <AnimatePresence>
-                    {copySuccess && (
-                        <motion.div
-                            className="fixed top-4 right-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg z-50"
-                            initial={{ opacity: 0, x: 100 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 100 }}
-                        >
-                            <div className="flex items-center">
-                                <CheckCircle size={18} className="mr-2" />
-                                <span>{copySuccess} copied to clipboard!</span>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                                <div className="flex items-center">
+                                    <CheckCircle size={18} className="mr-2" />
+                                    <span>{copySuccess} copied to clipboard!</span>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                 {/* Premium Upgrade Modal */}
                 <AnimatePresence>
@@ -1001,7 +1183,12 @@ export default function DeviceDetails() {
                                     >
                                         {isUpgrading ? (
                                             <>
-                                                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                                                <PulseLoader 
+                                                    color="#ffffff" 
+                                                    size={4}
+                                                    loading={true}
+                                                    cssOverride={{ marginRight: '8px' }}
+                                                />
                                                 Processing...
                                             </>
                                         ) : (
@@ -1079,7 +1266,12 @@ export default function DeviceDetails() {
                                     >
                                         {isDeleting ? (
                                             <>
-                                                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                                                <PulseLoader 
+                                                    color="#ffffff" 
+                                                    size={4}
+                                                    loading={true}
+                                                    cssOverride={{ marginRight: '8px' }}
+                                                />
                                                 Deleting...
                                             </>
                                         ) : (
