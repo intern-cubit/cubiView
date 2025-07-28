@@ -75,15 +75,10 @@ const RegistrationPage = () => {
                     >
                         <div className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
                             <img 
-                                src="/cubiview-logo.png" 
+                                src="/Cubiview-Cubicle.png" 
                                 alt="CubiView" 
                                 className="w-12 h-12 object-contain"
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                    e.target.nextSibling.style.display = 'block';
-                                }}
                             />
-                            <span className="text-2xl font-bold text-white hidden">CV</span>
                         </div>
                         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                             CubiView

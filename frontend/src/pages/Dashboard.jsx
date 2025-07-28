@@ -475,15 +475,10 @@ const Dashboard = () => {
                         <div className="flex items-center space-x-4 flex-1">
                             <div className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
                                 <img 
-                                    src="/cubiview-logo.png" 
+                                    src="/Cubiview-Cubicle.png" 
                                     alt="CubiView" 
                                     className="w-12 h-12 lg:w-16 lg:h-16 object-contain"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
-                                    }}
                                 />
-                                <User size={window.innerWidth < 768 ? 24 : 32} className="text-white hidden" />
                             </div>
                             <div className="flex-1 min-w-0">
                                 <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">

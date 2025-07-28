@@ -54,16 +54,10 @@ const LoginPage = () => {
                     >
                         <div className="w-20 h-20 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl mb-6">
                             <img 
-                                src="/cubiview-logo.png" 
+                                src="/Cubiview-Cubicle.png" 
                                 alt="CubiView Logo" 
                                 className="w-12 h-12"
-                                onError={(e) => {
-                                    // Fallback to text if logo fails to load
-                                    e.target.style.display = 'none';
-                                    e.target.nextElementSibling.style.display = 'block';
-                                }}
                             />
-                            <span className="text-white font-bold text-2xl" style={{display: 'none'}}>C</span>
                         </div>
                         <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                             Welcome to{' '}
@@ -150,18 +144,10 @@ const LoginPage = () => {
                     >
                         <div className="flex items-center justify-center space-x-2 mb-2">
                             <img 
-                                src="/cubiview-logo.png" 
+                                src="/Cubiview-Cubicle.png" 
                                 alt="CubiView Logo" 
                                 className="w-8 h-8"
-                                onError={(e) => {
-                                    // Fallback to gradient background if logo fails to load
-                                    e.target.style.display = 'none';
-                                    e.target.nextElementSibling.style.display = 'flex';
-                                }}
                             />
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center" style={{display: 'none'}}>
-                                <span className="text-white font-bold text-sm">C</span>
-                            </div>
                             <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 <span className="text-gradient">Cubi</span>View
                             </span>

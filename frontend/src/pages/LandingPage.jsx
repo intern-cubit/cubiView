@@ -108,18 +108,10 @@ export default function LandingPage() {
                             whileHover={{ scale: 1.05 }}
                         >
                             <img 
-                                src="/cubiview-logo.png" 
+                                src="/Cubiview-Cubicle.png" 
                                 alt="CubiView Logo" 
                                 className="w-8 h-8"
-                                onError={(e) => {
-                                    // Fallback to gradient background if logo fails to load
-                                    e.target.style.display = 'none';
-                                    e.target.nextElementSibling.style.display = 'flex';
-                                }}
                             />
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center" style={{display: 'none'}}>
-                                <span className="text-white font-bold text-sm">C</span>
-                            </div>
                             <span className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 <span className="text-gradient">Cubi</span>View
                             </span>
@@ -307,7 +299,6 @@ export default function LandingPage() {
                             transition={{ duration: 0.8, delay: 0.2 }}
                         >
                             <div className="relative max-w-lg mx-auto lg:max-w-none">
-                                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20 animate-pulse" />
                                 <Card className="relative p-4 sm:p-6 backdrop-blur-xl">
                                     <div className="aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
                                         <div className="text-6xl">🖥️</div>
@@ -608,7 +599,6 @@ export default function LandingPage() {
                             transition={{ duration: 0.8, delay: 0.2 }}
                         >
                             <div className="relative max-w-lg mx-auto lg:max-w-none">
-                                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20" />
                                 <Card className="relative p-6 backdrop-blur-xl">
                                     <div className="aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center relative group cursor-pointer">
                                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
@@ -655,7 +645,7 @@ export default function LandingPage() {
                         <p className={`text-lg sm:text-xl max-w-3xl mx-auto ${
                             isDark ? 'text-gray-300' : 'text-gray-600'
                         }`}>
-                            Choose the perfect plan for your organization. Start free, scale as you grow.
+                            Choose the perfect plan for your organization. Start free, scale as you grow. Pricing is per device per month.
                         </p>
                     </motion.div>
 
@@ -846,18 +836,10 @@ export default function LandingPage() {
                     }`}>
                         <div className="flex items-center space-x-2">
                             <img 
-                                src="/cubiview-logo.png" 
+                                src="/Cubiview-Cubicle.png" 
                                 alt="CubiView Logo" 
                                 className="w-8 h-8"
-                                onError={(e) => {
-                                    // Fallback to gradient background if logo fails to load
-                                    e.target.style.display = 'none';
-                                    e.target.nextElementSibling.style.display = 'flex';
-                                }}
                             />
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center" style={{display: 'none'}}>
-                                <span className="text-white font-bold text-sm">C</span>
-                            </div>
                             <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 <span className="text-gradient">Cubi</span>View
                             </span>

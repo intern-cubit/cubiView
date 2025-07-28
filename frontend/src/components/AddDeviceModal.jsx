@@ -129,7 +129,7 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                         <div className={`px-8 py-6 border-b ${
                             isDark 
                                 ? 'bg-gray-800/30 border-gray-700/50' 
-                                : 'bg-gray-50/50 border-gray-200/50'
+                                : 'bg-white border-gray-200'
                         }`}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-4">
@@ -219,7 +219,9 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                         </div>
 
                         {/* Content */}
-                        <div className="px-8 py-6">
+                        <div className={`px-8 py-6 ${
+                            isDark ? 'bg-gray-800/20' : 'bg-white'
+                        }`}>
                             <AnimatePresence mode="wait">
                                 {/* Step 1: Device Form */}
                                 {currentStep === "form" && (
@@ -262,7 +264,7 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                                                         className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
                                                             isDark 
                                                                 ? 'bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-blue-500/25' 
-                                                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500/25'
+                                                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500/25 shadow-sm'
                                                         }`}
                                                     />
                                                     <Wifi size={18} className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
@@ -287,7 +289,7 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                                                         className={`w-full pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
                                                             isDark 
                                                                 ? 'bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 focus:border-blue-500/50 focus:ring-blue-500/25' 
-                                                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500/25'
+                                                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500/25 shadow-sm'
                                                         }`}
                                                     />
                                                     <Smartphone size={18} className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
@@ -375,7 +377,7 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                                                     <div className={`rounded-lg p-6 border ${
                                                         isDark 
                                                             ? 'bg-gray-800/30 border-gray-600/30' 
-                                                            : 'bg-gray-50 border-gray-200'
+                                                            : 'bg-blue-50 border-blue-200 shadow-sm'
                                                     }`}>
                                                         <div className="space-y-3">
                                                             <div className="flex justify-between items-center">
@@ -383,7 +385,7 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                                                                     Device Registration Fee
                                                                 </span>
                                                                 <span className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                                                    $19.99
+                                                                    ₹500
                                                                 </span>
                                                             </div>
                                                             <hr className={isDark ? 'border-gray-600' : 'border-gray-300'} />
@@ -392,7 +394,7 @@ const AddDeviceModal = ({ isOpen, onClose, onDeviceAdded }) => {
                                                                     Total
                                                                 </span>
                                                                 <span className={`${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
-                                                                    $19.99
+                                                                    ₹500
                                                                 </span>
                                                             </div>
                                                         </div>

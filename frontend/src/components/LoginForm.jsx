@@ -67,16 +67,10 @@ export default function LoginForm() {
                         className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg"
                     >
                         <img 
-                            src="/cubiview-logo.png" 
+                            src="/Cubiview-Cubicle.png" 
                             alt="CubiView Logo" 
                             className="w-8 h-8"
-                            onError={(e) => {
-                                // Fallback to icon if logo fails to load
-                                e.target.style.display = 'none';
-                                e.target.nextElementSibling.style.display = 'block';
-                            }}
                         />
-                        <LogIn className="w-8 h-8 text-white" style={{display: 'none'}} />
                     </motion.div>
                     <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         Welcome Back
